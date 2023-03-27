@@ -15,15 +15,14 @@ public class ChatRestController {
     }
 
     @PostMapping(value = "{id}")
-    public void registerChat(@PathVariable Long id){
+    public void registerChat(@PathVariable Long id) {
         chatService.registerChat(id);
     }
 
     @DeleteMapping(value = "{id}")
-    public void deleteChat(@PathVariable Long id){
+    public void deleteChat(@PathVariable Long id) {
         chatService.deleteChat(id);
     }
-
 
 
 }

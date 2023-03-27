@@ -1,6 +1,6 @@
 package ru.tinkoff.edu.java.bot.exceptions;
 
-public class LinkIsNotRegisteredToChatException extends RuntimeException{
+public class LinkIsNotRegisteredToChatException extends RuntimeException {
 
 
     public LinkIsNotRegisteredToChatException() {

@@ -12,13 +12,15 @@ import java.util.Arrays;
 public class UpdateService {
 
 
-    //Этот заглушка, поведение будет позже. Исключения для проверки ControllerAdvice'а.
+    //Этот метод - заглушка, поведение будет позже. Исключения для проверки ControllerAdvice'а.
     //P.S. В Scrapper добавлена примерная имитация поведения с простенькой моделью и репозиторием.
-    public void updateLink(LinkUpdate linkUpdate){
+    public void updateLink(LinkUpdate linkUpdate) {
 
-        if (linkUpdate.id() == 42 && Arrays.stream(linkUpdate.tgChatIds()).anyMatch(c -> c == 42)) throw new LinkIsNotRegisteredToChatException("This link is not bounded to chat with given id");
+        if (linkUpdate.id() == 42 && Arrays.stream(linkUpdate.tgChatIds()).anyMatch(c -> c == 42))
+            throw new LinkIsNotRegisteredToChatException("This link is not bounded to chat with given id");
 
-        if (Arrays.stream(linkUpdate.tgChatIds()).anyMatch(c -> c == 10)) throw new ChatNotFoundException("No registered chat with given id");
+        if (Arrays.stream(linkUpdate.tgChatIds()).anyMatch(c -> c == 10))
+            throw new ChatNotFoundException("No registered chat with given id");
 
         // some normal behaviour
 

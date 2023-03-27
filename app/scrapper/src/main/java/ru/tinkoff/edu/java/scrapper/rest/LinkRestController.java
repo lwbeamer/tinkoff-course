@@ -22,19 +22,19 @@ public class LinkRestController {
     }
 
     @GetMapping
-    public ListLinkResponse getLinks(@RequestHeader("Tg-Chat-Id") Long chatId){
+    public ListLinkResponse getLinks(@RequestHeader("Tg-Chat-Id") Long chatId) {
         List<Link> list = linkService.getLinks(chatId);
-        return new ListLinkResponse(list,list.size());
+        return new ListLinkResponse(list, list.size());
     }
 
     @PostMapping
-    public LinkResponse addLink(@RequestHeader("Tg-Chat-Id") Long chatId, @RequestBody AddLinkRequest request){
+    public LinkResponse addLink(@RequestHeader("Tg-Chat-Id") Long chatId, @RequestBody AddLinkRequest request) {
         Link link = linkService.addLink(chatId, request);
         return new LinkResponse(link.getId(), link.getUrl());
     }
 
     @DeleteMapping
-    public LinkResponse deleteLink(@RequestHeader("Tg-Chat-Id") Long chatId, @RequestBody RemoveLinkRequest request){
+    public LinkResponse deleteLink(@RequestHeader("Tg-Chat-Id") Long chatId, @RequestBody RemoveLinkRequest request) {
         Link link = linkService.deleteLink(chatId, request);
         return new LinkResponse(link.getId(), link.getUrl());
     }

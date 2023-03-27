@@ -1,6 +1,6 @@
 package ru.tinkoff.edu.java.scrapper.exception;
 
-public class ChatAlreadyExistException extends RuntimeException{
+public class ChatAlreadyExistException extends RuntimeException {
 
     public ChatAlreadyExistException() {
     }

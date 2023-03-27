@@ -4,5 +4,4 @@ public record ApiErrorResponse(String description, String code, String exception
                                String exceptionMessage, String[] stacktrace) {
 
 
-
 }

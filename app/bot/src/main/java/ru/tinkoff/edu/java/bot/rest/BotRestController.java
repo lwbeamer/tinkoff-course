@@ -20,10 +20,9 @@ public class BotRestController {
     }
 
     @PostMapping("updates")
-    public void sendUpdate(@RequestBody LinkUpdate request){
+    public void sendUpdate(@RequestBody LinkUpdate request) {
         updateService.updateLink(request);
     }
-
 
 
 }

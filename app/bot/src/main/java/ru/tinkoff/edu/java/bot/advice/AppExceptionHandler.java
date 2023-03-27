@@ -18,7 +18,7 @@ public class AppExceptionHandler {
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
     public ApiErrorResponse handleNotFoundExceptions(RuntimeException exception) {
         return new ApiErrorResponse(
-                "Error", HttpStatus.BAD_REQUEST.toString(),exception.getClass().getName(), exception.getMessage(), Arrays.stream(exception.getStackTrace()).map(StackTraceElement::toString).toList().toArray(String[]::new));
+                "Error", HttpStatus.BAD_REQUEST.toString(), exception.getClass().getName(), exception.getMessage(), Arrays.stream(exception.getStackTrace()).map(StackTraceElement::toString).toList().toArray(String[]::new));
     }
 
 }
