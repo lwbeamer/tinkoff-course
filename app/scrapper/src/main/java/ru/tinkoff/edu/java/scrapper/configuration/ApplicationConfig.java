@@ -16,3 +16,4 @@ public record ApplicationConfig(@NotNull String test, Scheduler scheduler) {
         return config.scheduler().interval().toMillis();
     }
 }
+

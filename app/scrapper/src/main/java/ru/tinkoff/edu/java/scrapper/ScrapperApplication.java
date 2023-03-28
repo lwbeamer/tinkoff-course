@@ -23,6 +23,5 @@ public class ScrapperApplication {
 //        System.out.println(ctx.getBean(GitHubClient.class).fetchRepo("lwbeamer","asm-like-language"));
 //        System.out.println(ctx.getBean(StackOverflowClient.class).fetchQuestion(2336692));
 
-
     }
 }
