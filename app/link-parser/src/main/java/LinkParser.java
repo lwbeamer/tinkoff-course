@@ -11,5 +11,4 @@ public class LinkParser {
         return parser2.parseResult(url);
     }
 
-
 }

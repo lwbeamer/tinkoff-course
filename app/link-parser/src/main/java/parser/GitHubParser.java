@@ -3,6 +3,9 @@ package parser;
 import result.GithubParseResult;
 import result.ParseResult;
 
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.Arrays;
 
 public class GitHubParser extends AbstractParser {
@@ -12,15 +15,13 @@ public class GitHubParser extends AbstractParser {
 
     @Override
     public ParseResult parseResult(String url) {
-        if (url == null) return null;
-        String toParse = tweakUrl(url);
-        String[] tokens = toParse.split("/");
+        URL toParse = tweakUrl(url);
+        if (toParse == null) return null;
 
-        System.out.println(Arrays.toString(tokens));
-
-        if (tokens.length >= 1 && tokens[0].equals("github.com")) {
-            if (tokens.length >= 3) {
-                return new GithubParseResult(tokens[1], tokens[2]);
+        if (toParse.getHost().equals("github.com")) {
+            String[] tokens = toParse.getFile().substring(1).split("/");
+            if (tokens.length >= 2) {
+                return new GithubParseResult(tokens[0], tokens[1]);
             } else return null;
         }
 

@@ -2,6 +2,10 @@ package parser;
 
 import result.ParseResult;
 
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
+import java.net.URL;
+
 public abstract class AbstractParser {
 
     AbstractParser nextParser;
@@ -12,14 +16,14 @@ public abstract class AbstractParser {
 
     public abstract ParseResult parseResult(String url);
 
-    public final String tweakUrl(String url) {
-        url = url.replaceAll("\\s", "");
-        if (url.startsWith("https://")) {
-            return url.substring(8);
-        } else if (url.startsWith("http://")) {
-            return url.substring(7);
-        } else {
-            return url;
+    public final URL tweakUrl(String urlString) {
+        URL url;
+        try{
+            url = new URL(urlString);
+        } catch (MalformedURLException e){
+            System.out.println("Incorrect URL");
+            return null;
         }
+        return url;
     }
 }
