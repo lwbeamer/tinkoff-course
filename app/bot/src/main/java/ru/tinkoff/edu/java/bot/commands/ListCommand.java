@@ -28,7 +28,7 @@ public class ListCommand implements Command {
     }
 
     @Override
-    public SendMessage handle(Update update) {
+    public String handle(Update update) {
         long chatId = update.message().chat().id();
         try {
             ListLinkResponse response = scrapperClient.getLinks(chatId);
@@ -41,9 +41,9 @@ public class ListCommand implements Command {
                     msg.append(link.url()).append("\n\n");
                 }
             }
-            return new SendMessage(chatId, msg.toString());
+            return msg.toString();
         } catch (ScrapperClientException e){
-            return new SendMessage(chatId, e.getMessage());
+            return e.getMessage();
         }
     }
 }

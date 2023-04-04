@@ -28,7 +28,7 @@ public class TrackCommand implements Command {
     }
 
     @Override
-    public SendMessage handle(Update update) {
+    public String handle(Update update) {
         long chatId = update.message().chat().id();
         String msg;
         try {
@@ -36,9 +36,9 @@ public class TrackCommand implements Command {
                 scrapperClient.addLink(chatId, new AddLinkRequest(update.message().text()));
                 msg = "Ссылка успешно добавлена";
             } else msg = "Некорректная ссылка";
-            return new SendMessage(chatId, msg);
+            return msg;
         } catch (ScrapperClientException e) {
-            return new SendMessage(chatId, e.getMessage());
+            return e.getMessage();
         }
     }
 }

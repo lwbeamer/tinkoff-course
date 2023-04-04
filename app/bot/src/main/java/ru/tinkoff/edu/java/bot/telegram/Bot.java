@@ -4,6 +4,7 @@ package ru.tinkoff.edu.java.bot.telegram;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.UpdatesListener;
 import com.pengrad.telegrambot.model.Update;
+import com.pengrad.telegrambot.request.SendMessage;
 import ru.tinkoff.edu.java.bot.commands.Command;
 
 import java.util.List;
@@ -24,7 +25,7 @@ public class Bot implements AutoCloseable{
         bot.setUpdatesListener(updates -> {
             for (Update update : updates) {
 
-                bot.execute(userMessageProcessor.process(update));
+                bot.execute(new SendMessage(update.message().chat().id(),userMessageProcessor.process(update)));
 
 //                System.out.println(update.message().text());
 //                long chatId = update.message().chat().id();

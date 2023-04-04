@@ -30,7 +30,7 @@ public class UntrackCommand implements Command{
     }
 
     @Override
-    public SendMessage handle(Update update) {
+    public String handle(Update update) {
         long chatId = update.message().chat().id();
         String msg;
         try {
@@ -38,9 +38,9 @@ public class UntrackCommand implements Command{
                 scrapperClient.deleteLink(chatId, new RemoveLinkRequest(update.message().text()));
                 msg = "Ссылка успешно удалена";
             } else msg = "Некорректная ссылка";
-            return new SendMessage(chatId, msg);
+            return msg;
         } catch (ScrapperClientException e) {
-            return new SendMessage(chatId, e.getMessage());
+            return e.getMessage();
         }
     }
 }

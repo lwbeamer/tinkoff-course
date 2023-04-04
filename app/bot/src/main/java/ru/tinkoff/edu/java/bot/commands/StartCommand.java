@@ -38,13 +38,13 @@ public class StartCommand implements Command{
     }
 
     @Override
-    public SendMessage handle(Update update) {
+    public String handle(Update update) {
         long chatId = update.message().chat().id();
         try {
             scrapperClient.registerChat(chatId);
-            return new SendMessage(chatId, "Привет! Рад познакомиться, "+update.message().chat().firstName());
+            return "Привет! Рад познакомиться, "+update.message().chat().firstName();
         } catch (ScrapperClientException e){
-            return new SendMessage(chatId, e.getMessage());
+            return e.getMessage();
         }
 
 

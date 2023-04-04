@@ -19,7 +19,7 @@ public class HelpCommand implements Command{
 
     //у команды help (только у неё, это особый случай), не вызвается этот метод. Она обрабатывается прямиком в UserMessageProcessor
     @Override
-    public SendMessage handle(Update update) {
-        return new SendMessage(update.message().chat().id(),"Help is executing...");
+    public String handle(Update update) {
+        return "Help is executing...";
     }
 }
