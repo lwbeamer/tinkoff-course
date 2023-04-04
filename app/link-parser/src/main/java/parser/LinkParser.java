@@ -1,3 +1,5 @@
+package parser;
+
 import parser.AbstractParser;
 import parser.GitHubParser;
 import parser.StackOverflowParser;
