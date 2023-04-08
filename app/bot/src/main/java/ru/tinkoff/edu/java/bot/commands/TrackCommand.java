@@ -1,7 +1,6 @@
 package ru.tinkoff.edu.java.bot.commands;
 
 import com.pengrad.telegrambot.model.Update;
-import com.pengrad.telegrambot.request.SendMessage;
 import org.springframework.stereotype.Component;
 import parser.LinkParser;
 import ru.tinkoff.edu.java.bot.client.ScrapperClient;
@@ -11,11 +10,14 @@ import ru.tinkoff.edu.java.bot.dto.AddLinkRequest;
 @Component
 public class TrackCommand implements Command {
 
-    public TrackCommand(ScrapperClient scrapperClient) {
-        this.scrapperClient = scrapperClient;
-    }
-
     private final ScrapperClient scrapperClient;
+
+    private final LinkParser parser;
+
+    public TrackCommand(ScrapperClient scrapperClient, LinkParser parser) {
+        this.scrapperClient = scrapperClient;
+        this.parser = parser;
+    }
 
     @Override
     public String command() {
@@ -32,7 +34,7 @@ public class TrackCommand implements Command {
         long chatId = update.message().chat().id();
         String msg;
         try {
-            if (new LinkParser().parseUrl(update.message().text()) != null){
+            if (parser.parseUrl(update.message().text()) != null){
                 scrapperClient.addLink(chatId, new AddLinkRequest(update.message().text()));
                 msg = "Ссылка успешно добавлена";
             } else msg = "Некорректная ссылка";

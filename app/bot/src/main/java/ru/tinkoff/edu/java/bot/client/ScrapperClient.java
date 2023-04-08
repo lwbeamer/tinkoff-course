@@ -1,10 +1,7 @@
 package ru.tinkoff.edu.java.bot.client;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 import ru.tinkoff.edu.java.bot.dto.AddLinkRequest;
@@ -15,17 +12,15 @@ import ru.tinkoff.edu.java.bot.dto.RemoveLinkRequest;
 
 public class ScrapperClient {
 
-
-    @Value("${scrapper.baseurl}")
-    private String scrapperBaseUrl;
-
     private final WebClient webClient;
 
-    public ScrapperClient() {
-        this.webClient = WebClient.create(scrapperBaseUrl);
+
+    //По умолчанию - webClient инжектится из ClientConfiguration c baseUrl по умолчанию
+    public ScrapperClient(WebClient webClient) {
+        this.webClient = webClient;
     }
 
-
+    //Здесь webClient не инжектится, чтобы была возможность указать baseUrl.
     public ScrapperClient(String baseUrl) {
         this.webClient = WebClient.create(baseUrl);
     }

@@ -1,4 +1,4 @@
-package ru.tinkoff.edu.java.bot.configuration;
+package ru.tinkoff.edu.java.bot.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

@@ -1,8 +1,7 @@
 package ru.tinkoff.edu.java.bot.commands;
 
 import com.pengrad.telegrambot.model.Update;
-import com.pengrad.telegrambot.request.SendMessage;
-import ru.tinkoff.edu.java.bot.configuration.BotCommand;
+import ru.tinkoff.edu.java.bot.dto.BotCommand;
 
 public interface Command {
     String command();
