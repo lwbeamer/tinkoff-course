@@ -65,6 +65,7 @@ public class UserMessageProcessor {
             default -> {
                 //По логике этот return никак недостижим
                 return "Что-то пошло не так. Проблема на нашей стороне";
+
             }
         }
 

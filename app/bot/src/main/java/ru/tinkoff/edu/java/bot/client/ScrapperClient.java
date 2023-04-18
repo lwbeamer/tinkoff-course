@@ -68,6 +68,7 @@ public class ScrapperClient {
         return response;
     }
 
+
     public void registerChat(Long tgChatId, UserAddDto userAddDto) {
         webClient.post().uri("/tg-chat/{id}", tgChatId).bodyValue(userAddDto).exchangeToMono(response -> {
             if (response.statusCode().equals(HttpStatus.BAD_REQUEST)) {

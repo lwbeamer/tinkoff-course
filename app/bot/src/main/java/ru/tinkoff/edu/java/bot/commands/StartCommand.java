@@ -46,6 +46,7 @@ public class StartCommand implements Command {
             scrapperClient.registerChat(chatId, userAddDto);
             return "Привет! Рад познакомиться, " + update.message().chat().firstName();
         } catch (ScrapperClientException e) {
+
             return e.getMessage();
         }
 
