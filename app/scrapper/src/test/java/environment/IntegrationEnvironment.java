@@ -1,3 +1,5 @@
+package environment;
+
 import liquibase.Contexts;
 import liquibase.LabelExpression;
 import liquibase.Liquibase;
@@ -6,9 +8,14 @@ import liquibase.database.DatabaseFactory;
 import liquibase.database.jvm.JdbcConnection;
 import liquibase.exception.LiquibaseException;
 import liquibase.resource.DirectoryResourceAccessor;
+import org.springframework.boot.jdbc.DataSourceBuilder;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.context.ContextConfiguration;
 import org.testcontainers.containers.PostgreSQLContainer;
-import org.testcontainers.junit.jupiter.Testcontainers;
 
+import javax.sql.DataSource;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.nio.file.Path;
@@ -16,7 +23,27 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-abstract class IntegrationEnvironment {
+@ContextConfiguration(classes = IntegrationEnvironment.EnvironmentConfiguration.class)
+public abstract class IntegrationEnvironment {
+
+
+    @Configuration
+    static class EnvironmentConfiguration{
+        @Bean
+        public DataSource dataSource() {
+            return DataSourceBuilder.create()
+                    .url(POSTGRES_CONTAINER.getJdbcUrl())
+                    .username(POSTGRES_CONTAINER.getUsername())
+                    .password(POSTGRES_CONTAINER.getPassword())
+                    .build();
+        }
+
+        @Bean
+        public JdbcTemplate jdbcTemplate(DataSource dataSource){
+            return new JdbcTemplate(dataSource);
+        }
+
+    }
 
     static final String IMAGE_VERSION = "postgres:15";
 

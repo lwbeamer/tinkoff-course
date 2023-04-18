@@ -2,16 +2,15 @@ package ru.tinkoff.edu.java.scrapper.model;
 
 import lombok.Data;
 
+import java.sql.Timestamp;
+
 @Data
 public class Link {
 
-    private static Long nextId = 1L;
+
     private Long id;
     private String url;
+    private Timestamp updatedAt;
 
-    public Link(String url) {
-        this.id = nextId;
-        nextId++;
-        this.url = url;
-    }
+
 }

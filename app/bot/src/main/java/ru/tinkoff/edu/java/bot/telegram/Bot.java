@@ -49,6 +49,10 @@ public class Bot implements AutoCloseable {
         });
     }
 
+    public void sendMessage(Long chatId, String msg) {
+        bot.execute(new SendMessage(chatId, msg));
+    }
+
 
     @Override
     public void close() throws Exception {
