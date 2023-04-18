@@ -33,7 +33,7 @@ public class Bot implements AutoCloseable {
         System.out.println("Бот запущен...");
         bot.setUpdatesListener(updates -> {
             for (Update update : updates) {
-                bot.execute(new SendMessage(update.message().chat().id(), userMessageProcessor.process(update)));
+                if (update.message() != null) bot.execute(new SendMessage(update.message().chat().id(), userMessageProcessor.process(update)));
 
 //                System.out.println(update.message().text());
 //                long chatId = update.message().chat().id();

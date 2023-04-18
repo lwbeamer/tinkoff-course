@@ -1,4 +1,4 @@
-package ru.tinkoff.edu.java.scrapper.service.jdbc;
+package ru.tinkoff.edu.java.scrapper.service.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -27,7 +27,7 @@ import java.util.List;
 
 @Service
 @Slf4j
-public class JdbcLinkUpdateService implements LinkUpdateService {
+public class LinkUpdateServiceImpl implements LinkUpdateService {
 
 
     @Value("${update.delta.time}")
@@ -46,7 +46,7 @@ public class JdbcLinkUpdateService implements LinkUpdateService {
     private final BotClient botClient;
 
 
-    public JdbcLinkUpdateService(LinkRepository linkRepository, SubscriptionRepository subscriptionRepository, LinkParser linkParser, GitHubClient gitHubClient, StackOverflowClient stackOverflowClient, BotClient botClient) {
+    public LinkUpdateServiceImpl(LinkRepository linkRepository, SubscriptionRepository subscriptionRepository, LinkParser linkParser, GitHubClient gitHubClient, StackOverflowClient stackOverflowClient, BotClient botClient) {
         this.linkRepository = linkRepository;
         this.subscriptionRepository = subscriptionRepository;
         this.linkParser = linkParser;
@@ -148,7 +148,7 @@ public class JdbcLinkUpdateService implements LinkUpdateService {
                         if (response.answerCount() > link.getSoAnswerCount()) {
                             updateDescription += "На вопрос появились новые ответы\n";
                         }
-                        link.setGhForksCount(response.answerCount());
+                        link.setSoAnswerCount(response.answerCount());
                         linkRepository.updateSoAnswerCount(link);
                     }
 

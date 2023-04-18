@@ -21,7 +21,6 @@ public class ChatRestController {
     //id оставил в PathVariable, чтобы не менять способ обращения к endpoint'у
     @PostMapping(value = "{id}")
     public void registerChat(@PathVariable Long id, @RequestBody UserAddDto userAddDto) {
-        System.out.println("Пришлё запрос на регистрацию чата "+userAddDto);
         chatService.register(new User(id, userAddDto.username(), userAddDto.firstName(), userAddDto.lastName()));
     }
 

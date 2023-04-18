@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.tinkoff.edu.java.scrapper.ScrapperApplication;
 import ru.tinkoff.edu.java.scrapper.mapper.UserRowMapper;
 import ru.tinkoff.edu.java.scrapper.model.User;
-import ru.tinkoff.edu.java.scrapper.repository.UserJdbcTemplateRepository;
+import ru.tinkoff.edu.java.scrapper.repository.jdbc.UserJdbcTemplateRepository;
 
 import java.util.List;
 

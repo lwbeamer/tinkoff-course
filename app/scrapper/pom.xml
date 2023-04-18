@@ -51,7 +51,6 @@
             <version>2.0.2</version>
         </dependency>
         <dependency>
-
             <groupId>ru.tinkoff.edu</groupId>
             <artifactId>link-parser</artifactId>
             <version>1.0-SNAPSHOT</version>
@@ -83,6 +82,10 @@
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
             <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jooq</groupId>
+            <artifactId>jooq</artifactId>
         </dependency>
     </dependencies>
 

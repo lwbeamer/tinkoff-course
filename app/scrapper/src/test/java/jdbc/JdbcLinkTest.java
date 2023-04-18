@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.tinkoff.edu.java.scrapper.ScrapperApplication;
 import ru.tinkoff.edu.java.scrapper.mapper.LinkRowMapper;
 import ru.tinkoff.edu.java.scrapper.model.Link;
-import ru.tinkoff.edu.java.scrapper.repository.*;
+import ru.tinkoff.edu.java.scrapper.repository.jdbc.LinkJdbcTemplateRepository;
 
 import java.sql.Timestamp;
 import java.util.List;
