@@ -22,7 +22,7 @@ public class LinkUpdateScheduler {
 
 
 
-    public LinkUpdateScheduler(LinkUpdateService linkUpdateService, LinkParser linkParser) {
+    public LinkUpdateScheduler(LinkUpdateService linkUpdateService) {
         this.linkUpdateService = linkUpdateService;
     }
 

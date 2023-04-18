@@ -135,7 +135,7 @@ public class JdbcLinkTest extends IntegrationEnvironment {
 
         linkBeforeUpdate.get(0).setUpdatedAt(new Timestamp(100000));
 
-        linkRepository.updateDate(linkBeforeUpdate.get(0));
+        linkRepository.updateCheckDate(linkBeforeUpdate.get(0));
 
         List<Link> linkAfterUpdate = jdbcTemplate.query("select * from link where link.url = ?", linkRowMapper, "https://stackoverflow.com/questions/2336692/java-multiple-class-declarations-in-one-file");
 

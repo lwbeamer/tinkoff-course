@@ -36,7 +36,7 @@ public class JdbcSubscriptionService implements SubscriptionService {
         if (link == null) {
             link = new Link();
             link.setUrl(url.toString());
-            link.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
+            link.setCheckedAt(new Timestamp(System.currentTimeMillis()));
             linkRepository.add(link);
             //обращение ниже нужно, чтобы получить id из БД
             link = linkRepository.findByUrl(link.getUrl());

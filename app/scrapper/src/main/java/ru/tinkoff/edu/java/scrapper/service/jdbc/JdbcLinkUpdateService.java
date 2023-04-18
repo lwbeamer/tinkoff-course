@@ -22,7 +22,6 @@ import ru.tinkoff.edu.java.scrapper.repository.SubscriptionRepository;
 import ru.tinkoff.edu.java.scrapper.service.LinkUpdateService;
 
 import java.sql.Timestamp;
-import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.List;
 
@@ -69,31 +68,95 @@ public class JdbcLinkUpdateService implements LinkUpdateService {
             ParseResult result = linkParser.parseUrl(link.getUrl());
             if (result instanceof GithubParseResult) {
                 try {
-                    System.out.println(link.getUrl());
+                    boolean isUpdated = false;
+                    String updateDescription = "";
+
+
+//                    System.out.println(link.getUrl());
+//                    System.out.println("forks " + link.getGhForksCount());
+//                    System.out.println("pushedAt " + link.getGhPushedAt());
+//                    System.out.println("desc "+ link.getGhDescription());
                     GitHubResponse response = gitHubClient.fetchRepo(((GithubParseResult) result).username(), ((GithubParseResult) result).repository());
-                    System.out.println("github = " + link.getUrl() + " " + response.updatedAt() + " " + response.pushedAt());
-                    System.out.println("Дата обновления из АПИ: "+ response.updatedAt().toInstant());
-                    System.out.println("Дата обновления из БД: "+ link.getUpdatedAt().toInstant());
-                    if (response.updatedAt().toInstant().isAfter(link.getUpdatedAt().toInstant())) {
-                        link.setUpdatedAt(new Timestamp(response.updatedAt().toInstant().toEpochMilli()));
-                        linkRepository.updateDate(link);
-                        Long[] chats = subscriptionRepository.findChatsByLink(link.getId()).stream().map(Relation::getChatId).toArray(Long[]::new);
-                        botClient.updateLink(new LinkUpdate(link.getId(), link.getUrl(), "some udate of gh link", chats));
+//                    System.out.println(response);
+
+
+                    if (response.forksCount() != link.getGhForksCount()) {
+                        isUpdated = true;
+                        if (response.forksCount() < link.getGhForksCount()) {
+                            updateDescription += "В репозитории уменьшилось кол-во форков\n";
+                        }
+                        if (response.forksCount() > link.getGhForksCount()) {
+                            updateDescription += "В репозитории появились новые форки\n";
+                        }
+                        link.setGhForksCount(response.forksCount());
+                        linkRepository.updateGhForksCount(link);
                     }
+
+
+                    if (link.getGhDescription() == null || !response.description().equals(link.getGhDescription())) {
+                        if (link.getGhDescription() != null) isUpdated = true;
+                        link.setGhDescription(response.description());
+                        updateDescription += "В репозитории изменилось описание\n";
+                        linkRepository.updateGhDescription(link);
+                    }
+
+                    if (link.getGhPushedAt() == null || response.pushedAt().toInstant().isAfter(link.getGhPushedAt().toInstant())) {
+                        if (link.getGhPushedAt() != null) isUpdated = true;
+                        link.setGhPushedAt(new Timestamp(response.pushedAt().toInstant().toEpochMilli()));
+                        updateDescription += "В репозитории появился новый commit\n";
+                        linkRepository.updateGhPushedAt(link);
+                    }
+
+
+                    linkRepository.updateCheckDate(link);
+
+                    if (isUpdated) {
+                        Long[] chats = subscriptionRepository.findChatsByLink(link.getId()).stream().map(Relation::getChatId).toArray(Long[]::new);
+                        botClient.updateLink(new LinkUpdate(link.getId(), link.getUrl(), "Вышли обновления в репозитории:\n"+updateDescription, chats));
+                    }
+
+
                 } catch (GitHubRequestException e) {
                     log.warn(e.getMessage());
                 }
 
             } else if (result instanceof StackOverflowParseResult) {
                 try {
-                    System.out.println(link.getUrl());
+
+                    boolean isUpdated = false;
+                    String updateDescription = "";
+
+
+//                    System.out.println(link.getUrl());
                     StackOverflowItem response = stackOverflowClient.fetchQuestion(((StackOverflowParseResult) result).id());
-                    System.out.println("stackover = " + link.getUrl() + " " + response.lastActivityDate());
-                    if (response.lastActivityDate().isAfter(link.getUpdatedAt().toLocalDateTime().atOffset(ZoneOffset.UTC))) {
-                        link.setUpdatedAt(new Timestamp(response.lastActivityDate().toInstant().toEpochMilli()));
-                        linkRepository.updateDate(link);
+//                    System.out.println(response);
+
+
+
+                    if (link.getSoLastEditDate() == null || response.lastEditDate().isAfter(link.getSoLastEditDate().toLocalDateTime().atOffset(ZoneOffset.UTC))) {
+                        if (link.getSoLastEditDate() != null) isUpdated = true;
+                        link.setSoLastEditDate(new Timestamp(response.lastEditDate().toInstant().toEpochMilli()));
+                        updateDescription += "Текст вопроса был изменён\n";
+                        linkRepository.updateSoLastEditDate(link);
+                    }
+
+                    if (response.answerCount() != link.getSoAnswerCount()) {
+                        isUpdated = true;
+                        if (response.answerCount() < link.getSoAnswerCount()) {
+                            updateDescription += "На вопрос уменьшилось кол-во ответов\n";
+                        }
+                        if (response.answerCount() > link.getSoAnswerCount()) {
+                            updateDescription += "На вопрос появились новые ответы\n";
+                        }
+                        link.setGhForksCount(response.answerCount());
+                        linkRepository.updateSoAnswerCount(link);
+                    }
+
+                    linkRepository.updateCheckDate(link);
+
+                    if (isUpdated) {
                         Long[] chats = subscriptionRepository.findChatsByLink(link.getId()).stream().map(Relation::getChatId).toArray(Long[]::new);
-                        botClient.updateLink(new LinkUpdate(link.getId(), link.getUrl(), "some udate of so link", chats));
+                        botClient.updateLink(new LinkUpdate(link.getId(), link.getUrl(), "Вышли обновления в вопросе:\n"+updateDescription, chats));
                     }
 
                 } catch (StackOverflowRequestException e) {
