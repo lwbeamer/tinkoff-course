@@ -4,9 +4,9 @@ package ru.tinkoff.edu.java.scrapper.repository.jooq;
 import lombok.extern.slf4j.Slf4j;
 import org.jooq.DSLContext;
 import org.springframework.stereotype.Repository;
-import ru.tinkoff.edu.java.scrapper.model.Link;
-import ru.tinkoff.edu.java.scrapper.model.Relation;
-import ru.tinkoff.edu.java.scrapper.repository.SubscriptionRepository;
+import ru.tinkoff.edu.java.scrapper.model.commonDto.Link;
+import ru.tinkoff.edu.java.scrapper.model.jdbcAndJooq.Relation;
+import ru.tinkoff.edu.java.scrapper.repository.jdbcAndJooqContract.SubscriptionRepository;
 
 import java.util.List;
 
@@ -14,7 +14,6 @@ import static ru.tinkoff.edu.java.scrapper.domain.jooq.tables.UserLink.*;
 import static ru.tinkoff.edu.java.scrapper.domain.jooq.tables.Link.*;
 
 
-@Repository
 @Slf4j
 public class SubscriptionJooqRepository implements SubscriptionRepository {
 
