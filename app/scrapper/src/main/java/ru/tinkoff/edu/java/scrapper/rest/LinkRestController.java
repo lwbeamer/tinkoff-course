@@ -17,7 +17,6 @@ import java.util.List;
 public class LinkRestController {
 
 
-//    private final SubscriptionService subscriptionService;
 
     private final SubscriptionService subscriptionService;
     public LinkRestController(SubscriptionService subscriptionService) {
