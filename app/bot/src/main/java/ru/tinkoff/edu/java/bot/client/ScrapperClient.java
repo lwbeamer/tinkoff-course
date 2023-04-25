@@ -4,10 +4,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
-import ru.tinkoff.edu.java.bot.dto.AddLinkRequest;
-import ru.tinkoff.edu.java.bot.dto.LinkResponse;
-import ru.tinkoff.edu.java.bot.dto.ListLinkResponse;
-import ru.tinkoff.edu.java.bot.dto.RemoveLinkRequest;
+import ru.tinkoff.edu.java.bot.dto.*;
 
 
 public class ScrapperClient {
@@ -71,8 +68,9 @@ public class ScrapperClient {
         return response;
     }
 
-    public void registerChat(Long tgChatId) {
-        webClient.post().uri("/tg-chat/{id}", tgChatId).exchangeToMono(response -> {
+
+    public void registerChat(Long tgChatId, UserAddDto userAddDto) {
+        webClient.post().uri("/tg-chat/{id}", tgChatId).bodyValue(userAddDto).exchangeToMono(response -> {
             if (response.statusCode().equals(HttpStatus.BAD_REQUEST)) {
                 throw new ScrapperClientException("Некорректно указан ID или такой чат уже зарегистрирован");
             } else if (response.statusCode().equals(HttpStatus.INTERNAL_SERVER_ERROR)) {
