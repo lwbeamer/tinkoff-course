@@ -15,8 +15,7 @@ import ru.tinkoff.edu.java.scrapper.mapper.SubscriptionRowMapper;
 import ru.tinkoff.edu.java.scrapper.model.Link;
 import ru.tinkoff.edu.java.scrapper.model.Relation;
 import ru.tinkoff.edu.java.scrapper.model.User;
-import ru.tinkoff.edu.java.scrapper.repository.LinkJdbcTemplateRepository;
-import ru.tinkoff.edu.java.scrapper.repository.SubscriptionJdbcTemplateRepository;
+import ru.tinkoff.edu.java.scrapper.repository.jdbc.SubscriptionJdbcTemplateRepository;
 
 import java.sql.Timestamp;
 import java.util.List;
@@ -50,8 +49,8 @@ public class JdbcSubscriptionTest extends IntegrationEnvironment {
         for (int i = 0; i < 20; i++) {
             Link linkToAdd = new Link();
             linkToAdd.setUrl("https://stackoverflow.com/questions/2336692/java-multiple-class-declarations-in-one-file" + i);
-            linkToAdd.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
-            jdbcTemplate.update("insert into link (url, updated_at) values(?, ?)", linkToAdd.getUrl(), linkToAdd.getUpdatedAt());
+            linkToAdd.setCheckedAt(new Timestamp(System.currentTimeMillis()));
+            jdbcTemplate.update("insert into link (url, checked_at) values(?, ?)", linkToAdd.getUrl(), linkToAdd.getCheckedAt());
         }
 
         List<Link> afterInsertionLink = jdbcTemplate.query("select * from link", linkRowMapper);
@@ -84,8 +83,8 @@ public class JdbcSubscriptionTest extends IntegrationEnvironment {
         for (int i = 0; i < 20; i++) {
             Link linkToAdd = new Link();
             linkToAdd.setUrl("https://stackoverflow.com/questions/2336692/java-multiple-class-declarations-in-one-file" + i);
-            linkToAdd.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
-            jdbcTemplate.update("insert into link (url, updated_at) values(?, ?)", linkToAdd.getUrl(), linkToAdd.getUpdatedAt());
+            linkToAdd.setCheckedAt(new Timestamp(System.currentTimeMillis()));
+            jdbcTemplate.update("insert into link (url, checked_at) values(?, ?)", linkToAdd.getUrl(), linkToAdd.getCheckedAt());
         }
 
         List<Link> afterInsertionLink = jdbcTemplate.query("select * from link", linkRowMapper);
@@ -120,8 +119,8 @@ public class JdbcSubscriptionTest extends IntegrationEnvironment {
         for (int i = 0; i < 20; i++) {
             Link linkToAdd = new Link();
             linkToAdd.setUrl("https://stackoverflow.com/questions/2336692/java-multiple-class-declarations-in-one-file" + i);
-            linkToAdd.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
-            jdbcTemplate.update("insert into link (url, updated_at) values(?, ?)", linkToAdd.getUrl(), linkToAdd.getUpdatedAt());
+            linkToAdd.setCheckedAt(new Timestamp(System.currentTimeMillis()));
+            jdbcTemplate.update("insert into link (url, checked_at) values(?, ?)", linkToAdd.getUrl(), linkToAdd.getCheckedAt());
         }
 
         List<Link> afterInsertionLink = jdbcTemplate.query("select * from link", linkRowMapper);
@@ -162,8 +161,8 @@ public class JdbcSubscriptionTest extends IntegrationEnvironment {
 
         Link linkToAdd = new Link();
         linkToAdd.setUrl("https://stackoverflow.com/questions/2336692/java-multiple-class-declarations-in-one-file");
-        linkToAdd.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
-        jdbcTemplate.update("insert into link (url, updated_at) values(?, ?)", linkToAdd.getUrl(), linkToAdd.getUpdatedAt());
+        linkToAdd.setCheckedAt(new Timestamp(System.currentTimeMillis()));
+        jdbcTemplate.update("insert into link (url, checked_at) values(?, ?)", linkToAdd.getUrl(), linkToAdd.getCheckedAt());
 
         List<Link> afterInsertionLink = jdbcTemplate.query("select * from link", linkRowMapper);
 
@@ -192,8 +191,8 @@ public class JdbcSubscriptionTest extends IntegrationEnvironment {
 
         Link linkToAdd = new Link();
         linkToAdd.setUrl("https://stackoverflow.com/questions/2336692/java-multiple-class-declarations-in-one-file");
-        linkToAdd.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
-        jdbcTemplate.update("insert into link (url, updated_at) values(?, ?)", linkToAdd.getUrl(), linkToAdd.getUpdatedAt());
+        linkToAdd.setCheckedAt(new Timestamp(System.currentTimeMillis()));
+        jdbcTemplate.update("insert into link (url, checked_at) values(?, ?)", linkToAdd.getUrl(), linkToAdd.getCheckedAt());
         List<Link> afterInsertionLink = jdbcTemplate.query("select * from link", linkRowMapper);
         jdbcTemplate.update("insert into user_link (link_id, chat_id) values(?, ?)", afterInsertionLink.get(0).getId(), 42L);
 
@@ -220,8 +219,8 @@ public class JdbcSubscriptionTest extends IntegrationEnvironment {
         for (int i = 0; i < 20; i++) {
             Link linkToAdd = new Link();
             linkToAdd.setUrl("https://stackoverflow.com/questions/2336692/java-multiple-class-declarations-in-one-file" + i);
-            linkToAdd.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
-            jdbcTemplate.update("insert into link (url, updated_at) values(?, ?)", linkToAdd.getUrl(), linkToAdd.getUpdatedAt());
+            linkToAdd.setCheckedAt(new Timestamp(System.currentTimeMillis()));
+            jdbcTemplate.update("insert into link (url, checked_at) values(?, ?)", linkToAdd.getUrl(), linkToAdd.getCheckedAt());
         }
 
         List<Link> afterInsertionLink = jdbcTemplate.query("select * from link", linkRowMapper);

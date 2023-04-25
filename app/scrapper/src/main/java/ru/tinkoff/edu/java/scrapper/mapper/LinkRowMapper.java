@@ -16,7 +16,12 @@ public class LinkRowMapper implements RowMapper<Link> {
         Link link = new Link();
         link.setId(rs.getLong("id"));
         link.setUrl(rs.getString("url"));
-        link.setUpdatedAt(rs.getTimestamp("updated_at"));
+        link.setCheckedAt(rs.getTimestamp("checked_at"));
+        link.setGhPushedAt(rs.getTimestamp("gh_pushed_at"));
+        link.setGhDescription(rs.getString("gh_description"));
+        link.setGhForksCount(rs.getInt("gh_forks_count"));
+        link.setSoAnswerCount(rs.getInt("so_answer_count"));
+        link.setSoLastEditDate(rs.getTimestamp("so_last_edit_date"));
         return link;
     }
 }

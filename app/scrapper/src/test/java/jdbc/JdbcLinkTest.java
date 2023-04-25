@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.tinkoff.edu.java.scrapper.ScrapperApplication;
 import ru.tinkoff.edu.java.scrapper.mapper.LinkRowMapper;
 import ru.tinkoff.edu.java.scrapper.model.Link;
-import ru.tinkoff.edu.java.scrapper.repository.*;
+import ru.tinkoff.edu.java.scrapper.repository.jdbc.LinkJdbcTemplateRepository;
 
 import java.sql.Timestamp;
 import java.util.List;
@@ -38,7 +38,7 @@ public class JdbcLinkTest extends IntegrationEnvironment {
 
         Link linkToAdd = new Link();
         linkToAdd.setUrl("https://stackoverflow.com/questions/2336692/java-multiple-class-declarations-in-one-file");
-        linkToAdd.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
+        linkToAdd.setCheckedAt(new Timestamp(System.currentTimeMillis()));
         linkRepository.add(linkToAdd);
 
         List<Link> addedLink = jdbcTemplate.query("select * from link where link.url='https://stackoverflow.com/questions/2336692/java-multiple-class-declarations-in-one-file'", linkRowMapper);
@@ -57,8 +57,8 @@ public class JdbcLinkTest extends IntegrationEnvironment {
 
         Link linkToAdd = new Link();
         linkToAdd.setUrl("https://stackoverflow.com/questions/2336692/java-multiple-class-declarations-in-one-file");
-        linkToAdd.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
-        jdbcTemplate.update("insert into link (url, updated_at) values(?, ?)", linkToAdd.getUrl(), linkToAdd.getUpdatedAt());
+        linkToAdd.setCheckedAt(new Timestamp(System.currentTimeMillis()));
+        jdbcTemplate.update("insert into link (url, checked_at) values(?, ?)", linkToAdd.getUrl(), linkToAdd.getCheckedAt());
 
         List<Link> afterInsertionLink = jdbcTemplate.query("select * from link where link.url='https://stackoverflow.com/questions/2336692/java-multiple-class-declarations-in-one-file'", linkRowMapper);
 
@@ -82,8 +82,8 @@ public class JdbcLinkTest extends IntegrationEnvironment {
         for (int i = 0; i < 10; i++) {
             Link linkToAdd = new Link();
             linkToAdd.setUrl("https://stackoverflow.com/questions/2336692/java-multiple-class-declarations-in-one-file" + i);
-            linkToAdd.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
-            jdbcTemplate.update("insert into link (url, updated_at) values(?, ?)", linkToAdd.getUrl(), linkToAdd.getUpdatedAt());
+            linkToAdd.setCheckedAt(new Timestamp(System.currentTimeMillis()));
+            jdbcTemplate.update("insert into link (url, checked_at) values(?, ?)", linkToAdd.getUrl(), linkToAdd.getCheckedAt());
         }
 
         List<Link> afterInsertionLink = linkRepository.findAll();
@@ -102,8 +102,8 @@ public class JdbcLinkTest extends IntegrationEnvironment {
         for (int i = 0; i < 10; i++) {
             Link linkToAdd = new Link();
             linkToAdd.setUrl("https://stackoverflow.com/questions/2336692/java-multiple-class-declarations-in-one-file" + i);
-            linkToAdd.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
-            jdbcTemplate.update("insert into link (url, updated_at) values(?, ?)", linkToAdd.getUrl(), linkToAdd.getUpdatedAt());
+            linkToAdd.setCheckedAt(new Timestamp(System.currentTimeMillis()));
+            jdbcTemplate.update("insert into link (url, checked_at) values(?, ?)", linkToAdd.getUrl(), linkToAdd.getCheckedAt());
         }
 
         List<Link> afterInsertionLink = jdbcTemplate.query("select * from link", linkRowMapper);
@@ -125,22 +125,22 @@ public class JdbcLinkTest extends IntegrationEnvironment {
         Link linkToAdd = new Link();
         linkToAdd.setUrl("https://stackoverflow.com/questions/2336692/java-multiple-class-declarations-in-one-file");
         Timestamp timestampBefore = new Timestamp(System.currentTimeMillis());
-        linkToAdd.setUpdatedAt(timestampBefore);
-        jdbcTemplate.update("insert into link (url, updated_at) values(?, ?)", linkToAdd.getUrl(), linkToAdd.getUpdatedAt());
+        linkToAdd.setCheckedAt(timestampBefore);
+        jdbcTemplate.update("insert into link (url, checked_at) values(?, ?)", linkToAdd.getUrl(), linkToAdd.getCheckedAt());
 
 
         List<Link> linkBeforeUpdate = jdbcTemplate.query("select * from link where link.url = ?", linkRowMapper, "https://stackoverflow.com/questions/2336692/java-multiple-class-declarations-in-one-file");
 
-        Assertions.assertEquals(linkBeforeUpdate.get(0).getUpdatedAt(),timestampBefore);
+        Assertions.assertEquals(linkBeforeUpdate.get(0).getCheckedAt(),timestampBefore);
 
-        linkBeforeUpdate.get(0).setUpdatedAt(new Timestamp(100000));
+        linkBeforeUpdate.get(0).setCheckedAt(new Timestamp(100000));
 
-        linkRepository.updateDate(linkBeforeUpdate.get(0));
+        linkRepository.updateCheckDate(linkBeforeUpdate.get(0));
 
         List<Link> linkAfterUpdate = jdbcTemplate.query("select * from link where link.url = ?", linkRowMapper, "https://stackoverflow.com/questions/2336692/java-multiple-class-declarations-in-one-file");
 
         Assertions.assertEquals(beforeAddLink.size(), 0);
-        Assertions.assertEquals(linkAfterUpdate.get(0).getUpdatedAt(),new Timestamp(100000));
+        Assertions.assertEquals(linkAfterUpdate.get(0).getCheckedAt(),new Timestamp(100000));
     }
 
 

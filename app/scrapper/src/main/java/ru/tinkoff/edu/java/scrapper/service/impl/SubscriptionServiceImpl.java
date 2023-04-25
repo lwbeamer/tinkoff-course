@@ -1,4 +1,4 @@
-package ru.tinkoff.edu.java.scrapper.service.jdbc;
+package ru.tinkoff.edu.java.scrapper.service.impl;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,7 +14,7 @@ import java.util.List;
 
 
 @Service
-public class JdbcSubscriptionService implements SubscriptionService {
+public class SubscriptionServiceImpl implements SubscriptionService {
 
 
     private final LinkRepository linkRepository;
@@ -24,7 +24,7 @@ public class JdbcSubscriptionService implements SubscriptionService {
 
 //    private final long TWENTY_YEARS_IN_MILLIS = 20L * 365 * 24 * 60 * 60 * 1000;
 
-    public JdbcSubscriptionService(LinkRepository linkRepository, SubscriptionRepository subscriptionRepository) {
+    public SubscriptionServiceImpl(LinkRepository linkRepository, SubscriptionRepository subscriptionRepository) {
         this.linkRepository = linkRepository;
         this.subscriptionRepository = subscriptionRepository;
     }
@@ -36,7 +36,7 @@ public class JdbcSubscriptionService implements SubscriptionService {
         if (link == null) {
             link = new Link();
             link.setUrl(url.toString());
-            link.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
+            link.setCheckedAt(new Timestamp(System.currentTimeMillis()));
             linkRepository.add(link);
             //обращение ниже нужно, чтобы получить id из БД
             link = linkRepository.findByUrl(link.getUrl());
