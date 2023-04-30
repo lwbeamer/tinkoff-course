@@ -30,8 +30,24 @@ services:
     networks:
       - backend
 
+  rabbit:
+    image: rabbitmq:3-management
+    hostname: rabbitmq
+    container_name: rabbit
+    ports:
+      - 15672:15672
+      - 5672:5672
+    environment:
+      - RABBITMQ_DEFAULT_USER=lwbeamer
+      - RABBITMQ_DEFAULT_PASS=2281337
+    volumes:
+      - rabbitmq-state:/var/lib/rabbitmq
+    networks:
+      - backend
+
 volumes:
   link-service-data:
+  rabbitmq-state:
 
 networks:
   backend:

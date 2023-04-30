@@ -1,6 +1,8 @@
 package ru.tinkoff.edu.java.scrapper.service.jpa.impl;
 
 import lombok.extern.slf4j.Slf4j;
+import org.jooq.UpdatableRecord;
+import org.jooq.Update;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
@@ -20,6 +22,7 @@ import ru.tinkoff.edu.java.scrapper.exception.StackOverflowRequestException;
 import ru.tinkoff.edu.java.scrapper.model.commonDto.Link;
 import ru.tinkoff.edu.java.scrapper.model.jpa.LinkEntity;
 import ru.tinkoff.edu.java.scrapper.repository.jpa.JpaLinkRepository;
+import ru.tinkoff.edu.java.scrapper.service.UpdateNotificationService;
 import ru.tinkoff.edu.java.scrapper.service.contract.LinkUpdateService;
 
 import java.sql.Timestamp;
@@ -42,15 +45,17 @@ public class JpaLinkUpdateServiceImpl implements LinkUpdateService {
 
     private final StackOverflowClient stackOverflowClient;
 
-    private final BotClient botClient;
+//    private final BotClient botClient;
+
+    private final UpdateNotificationService notificationService;
 
 
-    public JpaLinkUpdateServiceImpl(JpaLinkRepository linkRepository, LinkParser linkParser, GitHubClient gitHubClient, StackOverflowClient stackOverflowClient, BotClient botClient) {
+    public JpaLinkUpdateServiceImpl(JpaLinkRepository linkRepository, LinkParser linkParser, GitHubClient gitHubClient, StackOverflowClient stackOverflowClient, UpdateNotificationService notificationService) {
         this.linkRepository = linkRepository;
         this.linkParser = linkParser;
         this.gitHubClient = gitHubClient;
         this.stackOverflowClient = stackOverflowClient;
-        this.botClient = botClient;
+        this.notificationService = notificationService;
     }
 
     @Override
@@ -117,7 +122,7 @@ public class JpaLinkUpdateServiceImpl implements LinkUpdateService {
 
                     if (isUpdated) {
                         List<Long> chatsIds = linkRepository.findChatIdsByLinkId(link.getId());
-                        botClient.updateLink(new LinkUpdate(link.getId(), link.getUrl(), "Вышли обновления в репозитории:\n"+updateDescription, chatsIds.toArray(new Long[0])));
+                        notificationService.updateLink(new LinkUpdate(link.getId(), link.getUrl(), "Вышли обновления в репозитории:\n"+updateDescription, chatsIds.toArray(new Long[0])));
                     }
 
 
@@ -163,7 +168,7 @@ public class JpaLinkUpdateServiceImpl implements LinkUpdateService {
 
                     if (isUpdated) {
                         List<Long> chatsIds = linkRepository.findChatIdsByLinkId(link.getId());
-                        botClient.updateLink(new LinkUpdate(link.getId(), link.getUrl(), "Вышли обновления в вопросе:\n"+updateDescription, chatsIds.toArray(new Long[0])));
+                        notificationService.updateLink(new LinkUpdate(link.getId(), link.getUrl(), "Вышли обновления в вопросе:\n"+updateDescription, chatsIds.toArray(new Long[0])));
                     }
 
                 } catch (StackOverflowRequestException e) {

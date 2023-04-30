@@ -9,7 +9,13 @@ import ru.tinkoff.edu.java.scrapper.schedule.Scheduler;
 
 @Validated
 @ConfigurationProperties(prefix = "app", ignoreUnknownFields = false)
-public record ApplicationConfig(@NotNull String test, Scheduler scheduler, AccessType dataBaseAccessType) {
+public record ApplicationConfig(@NotNull String test,
+                                Scheduler scheduler,
+                                AccessType dataBaseAccessType,
+                                Boolean useQueue,
+                                String queueName,
+                                String exchangeName,
+                                String routingKey) {
 
     @Bean
     public long schedulerIntervalMs(ApplicationConfig config) {
@@ -19,6 +25,5 @@ public record ApplicationConfig(@NotNull String test, Scheduler scheduler, Acces
     public enum AccessType {
         JDBC, JPA, JOOQ
     }
-
 }
 
