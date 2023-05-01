@@ -17,6 +17,7 @@
         <mockito.version>4.3.1</mockito.version>
         <testcontainers.version>1.17.1</testcontainers.version>
         <spring.test.version>3.0.5</spring.test.version>
+        <spring.data.version>2022.0.5</spring.data.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
     <modules>
@@ -39,6 +40,13 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-dependencies</artifactId>
                 <version>${spring-boot.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.data</groupId>
+                <artifactId>spring-data-bom</artifactId>
+                <version>${spring.data.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>

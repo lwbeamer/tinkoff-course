@@ -1,6 +1,6 @@
-package ru.tinkoff.edu.java.scrapper.repository;
+package ru.tinkoff.edu.java.scrapper.repository.jdbcAndJooqContract;
 
-import ru.tinkoff.edu.java.scrapper.model.User;
+import ru.tinkoff.edu.java.scrapper.model.commonDto.User;
 
 import java.util.List;
 

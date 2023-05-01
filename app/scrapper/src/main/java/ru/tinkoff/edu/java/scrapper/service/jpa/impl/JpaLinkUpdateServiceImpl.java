@@ -1,8 +1,10 @@
-package ru.tinkoff.edu.java.scrapper.service.jdbcAndJooq.impl;
+package ru.tinkoff.edu.java.scrapper.service.jpa.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import parser.LinkParser;
 import result.GithubParseResult;
 import result.ParseResult;
@@ -16,9 +18,8 @@ import ru.tinkoff.edu.java.scrapper.dto.StackOverflowItem;
 import ru.tinkoff.edu.java.scrapper.exception.GitHubRequestException;
 import ru.tinkoff.edu.java.scrapper.exception.StackOverflowRequestException;
 import ru.tinkoff.edu.java.scrapper.model.commonDto.Link;
-import ru.tinkoff.edu.java.scrapper.model.jdbcAndJooq.Relation;
-import ru.tinkoff.edu.java.scrapper.repository.jdbcAndJooqContract.LinkRepository;
-import ru.tinkoff.edu.java.scrapper.repository.jdbcAndJooqContract.SubscriptionRepository;
+import ru.tinkoff.edu.java.scrapper.model.jpa.LinkEntity;
+import ru.tinkoff.edu.java.scrapper.repository.jpa.JpaLinkRepository;
 import ru.tinkoff.edu.java.scrapper.service.contract.LinkUpdateService;
 
 import java.sql.Timestamp;
@@ -26,15 +27,14 @@ import java.time.ZoneOffset;
 import java.util.List;
 
 @Slf4j
-public class LinkUpdateServiceImpl implements LinkUpdateService {
-
+public class JpaLinkUpdateServiceImpl implements LinkUpdateService {
 
     @Value("${update.delta.time}")
     private Long timeUpdateDeltaInSeconds;
 
-    private final LinkRepository linkRepository;
+    private final JpaLinkRepository linkRepository;
 
-    private final SubscriptionRepository subscriptionRepository;
+
 
     private final LinkParser linkParser;
 
@@ -45,9 +45,8 @@ public class LinkUpdateServiceImpl implements LinkUpdateService {
     private final BotClient botClient;
 
 
-    public LinkUpdateServiceImpl(LinkRepository linkRepository, SubscriptionRepository subscriptionRepository, LinkParser linkParser, GitHubClient gitHubClient, StackOverflowClient stackOverflowClient, BotClient botClient) {
+    public JpaLinkUpdateServiceImpl(JpaLinkRepository linkRepository, LinkParser linkParser, GitHubClient gitHubClient, StackOverflowClient stackOverflowClient, BotClient botClient) {
         this.linkRepository = linkRepository;
-        this.subscriptionRepository = subscriptionRepository;
         this.linkParser = linkParser;
         this.gitHubClient = gitHubClient;
         this.stackOverflowClient = stackOverflowClient;
@@ -56,29 +55,44 @@ public class LinkUpdateServiceImpl implements LinkUpdateService {
 
     @Override
     public List<Link> getOldLinks() {
-        return linkRepository.findOldLinks(timeUpdateDeltaInSeconds);
+        log.info("getOldLinks() method invocation in JpaLinkUpdateServiceImpl");
+        Timestamp compareDate = new Timestamp(System.currentTimeMillis() - timeUpdateDeltaInSeconds*1000);
+        return linkRepository.findByCheckedAtLessThanOrderByCheckedAtDesc(compareDate).stream().map(Link::fromEntity).toList();
     }
 
 
-    public void updateLinks() {
-        List<Link> oldLinks = getOldLinks();
+    //внутренний вспомогательный метод реализации, в контракте его нет
+    public List<LinkEntity> getOldEntityLinks() {
+        Timestamp compareDate = new Timestamp(System.currentTimeMillis() - timeUpdateDeltaInSeconds*1000);
+        return linkRepository.findByCheckedAtLessThanOrderByCheckedAtDesc(compareDate);
+    }
 
-        for (Link link : oldLinks) {
+    @Override
+    @Transactional
+    public void updateLinks() {
+        log.info("updateLinks() method invocation in JpaLinkUpdateServiceImpl");
+        List<LinkEntity> oldLinks = getOldEntityLinks();
+
+        for (LinkEntity link : oldLinks) {
             ParseResult result = linkParser.parseUrl(link.getUrl());
             if (result instanceof GithubParseResult) {
                 try {
                     boolean isUpdated = false;
                     String updateDescription = "";
 
+
+                    System.out.println(link.getUrl());
                     GitHubResponse response = gitHubClient.fetchRepo(((GithubParseResult) result).username(), ((GithubParseResult) result).repository());
+                    System.out.println(response);
 
 
-                    if (response.forksCount() != link.getGhForksCount()) {
+                    if (link.getGhForksCount() == null || response.forksCount() != link.getGhForksCount()) {
                         isUpdated = true;
-                        if (response.forksCount() < link.getGhForksCount()) {
+                        if (link.getGhForksCount() == null) {link.setGhForksCount(0); isUpdated = false;}
+                        if (isUpdated && response.forksCount() < link.getGhForksCount()) {
                             updateDescription += "В репозитории уменьшилось кол-во форков\n";
                         }
-                        if (response.forksCount() > link.getGhForksCount()) {
+                        if (isUpdated && response.forksCount() > link.getGhForksCount()) {
                             updateDescription += "В репозитории появились новые форки\n";
                         }
                         link.setGhForksCount(response.forksCount());
@@ -97,12 +111,13 @@ public class LinkUpdateServiceImpl implements LinkUpdateService {
                         updateDescription += "В репозитории появился новый commit\n";
                     }
 
+                    link.setCheckedAt(new Timestamp(System.currentTimeMillis()));
 
-                    linkRepository.updateGhLink(link);
+                    linkRepository.save(link);
 
                     if (isUpdated) {
-                        Long[] chats = subscriptionRepository.findChatsByLink(link.getId()).stream().map(Relation::getChatId).toArray(Long[]::new);
-                        botClient.updateLink(new LinkUpdate(link.getId(), link.getUrl(), "Вышли обновления в репозитории:\n" + updateDescription, chats));
+                        List<Long> chatsIds = linkRepository.findChatIdsByLinkId(link.getId());
+                        botClient.updateLink(new LinkUpdate(link.getId(), link.getUrl(), "Вышли обновления в репозитории:\n"+updateDescription, chatsIds.toArray(new Long[0])));
                     }
 
 
@@ -116,7 +131,12 @@ public class LinkUpdateServiceImpl implements LinkUpdateService {
                     boolean isUpdated = false;
                     String updateDescription = "";
 
+
+                    System.out.println(link.getUrl());
                     StackOverflowItem response = stackOverflowClient.fetchQuestion(((StackOverflowParseResult) result).id());
+                    System.out.println(response);
+
+
 
                     if (response.lastEditDate() != null && (link.getSoLastEditDate() == null || response.lastEditDate().isAfter(link.getSoLastEditDate().toLocalDateTime().atOffset(ZoneOffset.UTC)))) {
                         if (link.getSoLastEditDate() != null) isUpdated = true;
@@ -124,22 +144,26 @@ public class LinkUpdateServiceImpl implements LinkUpdateService {
                         updateDescription += "Текст вопроса был изменён\n";
                     }
 
-                    if (response.answerCount() != link.getSoAnswerCount()) {
+                    if (link.getSoAnswerCount() == null || response.answerCount() != link.getSoAnswerCount()) {
                         isUpdated = true;
-                        if (response.answerCount() < link.getSoAnswerCount()) {
+                        if (link.getSoAnswerCount() == null) {link.setSoAnswerCount(0); isUpdated = false;}
+                        if (isUpdated && response.answerCount() < link.getSoAnswerCount()) {
                             updateDescription += "На вопрос уменьшилось кол-во ответов\n";
                         }
-                        if (response.answerCount() > link.getSoAnswerCount()) {
+                        if (isUpdated && response.answerCount() > link.getSoAnswerCount()) {
                             updateDescription += "На вопрос появились новые ответы\n";
                         }
                         link.setSoAnswerCount(response.answerCount());
                     }
 
-                    linkRepository.updateSoLink(link);
+
+                    link.setCheckedAt(new Timestamp(System.currentTimeMillis()));
+
+                    linkRepository.save(link);
 
                     if (isUpdated) {
-                        Long[] chats = subscriptionRepository.findChatsByLink(link.getId()).stream().map(Relation::getChatId).toArray(Long[]::new);
-                        botClient.updateLink(new LinkUpdate(link.getId(), link.getUrl(), "Вышли обновления в вопросе:\n" + updateDescription, chats));
+                        List<Long> chatsIds = linkRepository.findChatIdsByLinkId(link.getId());
+                        botClient.updateLink(new LinkUpdate(link.getId(), link.getUrl(), "Вышли обновления в вопросе:\n"+updateDescription, chatsIds.toArray(new Long[0])));
                     }
 
                 } catch (StackOverflowRequestException e) {

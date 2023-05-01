@@ -10,17 +10,19 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 import ru.tinkoff.edu.java.scrapper.ScrapperApplication;
+import ru.tinkoff.edu.java.scrapper.configuration.database.acess.JdbcAccessConfiguration;
 import ru.tinkoff.edu.java.scrapper.mapper.UserRowMapper;
-import ru.tinkoff.edu.java.scrapper.model.User;
+import ru.tinkoff.edu.java.scrapper.model.commonDto.User;
 import ru.tinkoff.edu.java.scrapper.repository.jdbc.UserJdbcTemplateRepository;
+import ru.tinkoff.edu.java.scrapper.repository.jdbcAndJooqContract.UserRepository;
 
 import java.util.List;
 
-@SpringBootTest(classes = {ScrapperApplication.class, TestConfiguration.class})
+@SpringBootTest(classes = {ScrapperApplication.class, TestConfiguration.class, JdbcAccessConfiguration.class})
 public class JdbcUserTest extends IntegrationEnvironment {
 
     @Autowired
-    private UserJdbcTemplateRepository userRepository;
+    private UserRepository userRepository;
 
     @Autowired
     private UserRowMapper userRowMapper;

@@ -1,19 +1,21 @@
-package ru.tinkoff.edu.java.scrapper.service.impl;
+package ru.tinkoff.edu.java.scrapper.service.jdbcAndJooq.impl;
 
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.tinkoff.edu.java.scrapper.model.Link;
-import ru.tinkoff.edu.java.scrapper.model.Relation;
-import ru.tinkoff.edu.java.scrapper.repository.LinkRepository;
-import ru.tinkoff.edu.java.scrapper.repository.SubscriptionRepository;
-import ru.tinkoff.edu.java.scrapper.service.SubscriptionService;
+import ru.tinkoff.edu.java.scrapper.model.commonDto.Link;
+import ru.tinkoff.edu.java.scrapper.model.jdbcAndJooq.Relation;
+import ru.tinkoff.edu.java.scrapper.repository.jdbcAndJooqContract.LinkRepository;
+import ru.tinkoff.edu.java.scrapper.repository.jdbcAndJooqContract.SubscriptionRepository;
+import ru.tinkoff.edu.java.scrapper.service.contract.SubscriptionService;
 
 import java.net.URI;
 import java.sql.Timestamp;
 import java.util.List;
 
 
-@Service
+@Slf4j
 public class SubscriptionServiceImpl implements SubscriptionService {
 
 
@@ -22,7 +24,6 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     private final SubscriptionRepository subscriptionRepository;
 
 
-//    private final long TWENTY_YEARS_IN_MILLIS = 20L * 365 * 24 * 60 * 60 * 1000;
 
     public SubscriptionServiceImpl(LinkRepository linkRepository, SubscriptionRepository subscriptionRepository) {
         this.linkRepository = linkRepository;
@@ -31,7 +32,8 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 
     @Override
     @Transactional
-    public Link add(Long chatId, URI url) {
+    public Link subscribe(Long chatId, URI url) {
+        log.info("subscribe() method invocation in SubscriptionServiceImpl. chatId = "+chatId+" url = "+url.toString());
         Link link = linkRepository.findByUrl(url.toString());
         if (link == null) {
             link = new Link();
@@ -54,7 +56,8 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 
     @Override
     @Transactional
-    public Link remove(Long chatId, URI url) {
+    public Link unsubscribe(Long chatId, URI url) {
+        log.info("unsubscribe() method invocation in SubscriptionServiceImpl. chatId = "+chatId+" url = "+url.toString());
         Link link = linkRepository.findByUrl(url.toString());
 
         if (link != null) {
@@ -65,7 +68,14 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     }
 
     @Override
-    public List<Link> getAllByUser(Long chatId) {
+    public List<Link> getLinksByChat(Long chatId) {
+        log.info("getLinksByChat() method invocation in SubscriptionServiceImpl. chatId = "+chatId);
         return subscriptionRepository.findLinksByChat(chatId);
+    }
+
+    @Override
+    public List<Long> getChatIdsByLink(Long linkId) {
+        log.info("getChatIdsByLink() method invocation in SubscriptionServiceImpl. linkId = "+linkId);
+        return null;
     }
 }

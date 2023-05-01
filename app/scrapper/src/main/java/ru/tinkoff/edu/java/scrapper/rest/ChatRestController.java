@@ -2,8 +2,8 @@ package ru.tinkoff.edu.java.scrapper.rest;
 
 import org.springframework.web.bind.annotation.*;
 import ru.tinkoff.edu.java.scrapper.dto.UserAddDto;
-import ru.tinkoff.edu.java.scrapper.model.User;
-import ru.tinkoff.edu.java.scrapper.service.TgChatService;
+import ru.tinkoff.edu.java.scrapper.model.commonDto.User;
+import ru.tinkoff.edu.java.scrapper.service.contract.TgChatService;
 
 @RestController
 @RequestMapping("/tg-chat")
