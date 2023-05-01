@@ -76,6 +76,7 @@ public class JdbcAccessConfiguration {
                 gitHubClient,
                 stackOverflowClient,
                 notificationService);
+
     }
 
     @Bean

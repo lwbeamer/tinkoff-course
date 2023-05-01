@@ -136,7 +136,6 @@ public class JpaLinkUpdateServiceImpl implements LinkUpdateService {
                     StackOverflowItem response = stackOverflowClient.fetchQuestion(((StackOverflowParseResult) result).id());
                     System.out.println(response);
 
-
                     if (response.lastEditDate() != null && (link.getSoLastEditDate() == null || response.lastEditDate().isAfter(link.getSoLastEditDate().toLocalDateTime().atOffset(ZoneOffset.UTC)))) {
                         if (link.getSoLastEditDate() != null) isUpdated = true;
                         link.setSoLastEditDate(new Timestamp(response.lastEditDate().toInstant().toEpochMilli()));

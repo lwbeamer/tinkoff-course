@@ -36,5 +36,4 @@ public class JpaTgChatServiceImpl implements TgChatService {
         userRepository.delete(optionalUser.get());
     }
 
-
 }

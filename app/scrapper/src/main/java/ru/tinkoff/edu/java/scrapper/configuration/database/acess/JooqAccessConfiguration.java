@@ -62,6 +62,7 @@ public class JooqAccessConfiguration {
                 gitHubClient,
                 stackOverflowClient,
                 notificationService);
+
     }
 
     @Bean
