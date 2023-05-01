@@ -1,8 +1,6 @@
 package ru.tinkoff.edu.java.scrapper.service.jdbcAndJooq.impl;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.annotation.Primary;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.tinkoff.edu.java.scrapper.exception.ChatAlreadyExistException;
 import ru.tinkoff.edu.java.scrapper.model.commonDto.User;
@@ -25,7 +23,7 @@ public class TgChatServiceImpl implements TgChatService {
 
     @Override
     public void register(User user) {
-        log.info("register() method invocation in TgChatServiceImpl. chatId = "+user.getChatId());
+        log.info("register() method invocation in TgChatServiceImpl. chatId = " + user.getChatId());
         User userInBd = userRepository.findByChatId(user.getChatId());
         if (userInBd != null) throw new ChatAlreadyExistException();
         userRepository.add(user);
@@ -34,7 +32,7 @@ public class TgChatServiceImpl implements TgChatService {
     @Override
     @Transactional
     public void unregister(Long chatId) {
-        log.info("unregister() method invocation in TgChatServiceImpl. chatId = "+chatId);
+        log.info("unregister() method invocation in TgChatServiceImpl. chatId = " + chatId);
         userRepository.remove(chatId);
         subscriptionRepository.removeAllByUser(chatId);
     }

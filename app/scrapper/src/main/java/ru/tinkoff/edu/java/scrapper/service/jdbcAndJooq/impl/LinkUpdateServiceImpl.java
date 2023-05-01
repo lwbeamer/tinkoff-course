@@ -43,7 +43,6 @@ public class LinkUpdateServiceImpl implements LinkUpdateService {
 
     private final StackOverflowClient stackOverflowClient;
 
-//    private final BotClient botClient;
 
     private final UpdateNotificationService notificationService;
 

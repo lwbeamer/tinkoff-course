@@ -6,7 +6,6 @@ import org.springframework.amqp.support.converter.ClassMapper;
 import org.springframework.amqp.support.converter.DefaultClassMapper;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.amqp.support.converter.MessageConverter;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import ru.tinkoff.edu.java.bot.dto.LinkUpdate;
@@ -19,28 +18,39 @@ import java.util.Map;
 @Configuration
 public class RabbitMQConfiguration {
 
-    @Value("${app.queue-name}")
-    private String queueName;
+    private final ApplicationConfig config;
 
-    @Value("${app.exchange-name}")
-    private String exchangeName;
-
-    @Value("${app.routing-key}")
-    private String routingKey;
+    public RabbitMQConfiguration(ApplicationConfig config) {
+        this.config = config;
+    }
 
     @Bean
     Queue queue() {
-        return new Queue(queueName, true);
+        return QueueBuilder.durable(config.queueName())
+                .withArgument("x-dead-letter-exchange", config.exchangeName())
+                .withArgument("x-dead-letter-routing-key", config.routingKey() + ".dlq")
+                .build();
+    }
+
+
+    @Bean
+    Queue deadLetterQueue() {
+        return new Queue(config.queueName() + ".dlq", true);
     }
 
     @Bean
     DirectExchange exchange() {
-        return new DirectExchange(exchangeName);
+        return new DirectExchange(config.exchangeName());
     }
 
     @Bean
     Binding binding(Queue queue, DirectExchange exchange) {
-        return BindingBuilder.bind(queue).to(exchange).with(routingKey);
+        return BindingBuilder.bind(queue).to(exchange).with(config.routingKey());
+    }
+
+    @Bean
+    Binding dlqBinding(Queue deadLetterQueue, DirectExchange exchange) {
+        return BindingBuilder.bind(deadLetterQueue).to(exchange).with(config.routingKey() + ".dlq");
     }
 
     @Bean

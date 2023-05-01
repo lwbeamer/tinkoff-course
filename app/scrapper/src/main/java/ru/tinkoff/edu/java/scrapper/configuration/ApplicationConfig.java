@@ -10,9 +10,9 @@ import ru.tinkoff.edu.java.scrapper.schedule.Scheduler;
 @Validated
 @ConfigurationProperties(prefix = "app", ignoreUnknownFields = false)
 public record ApplicationConfig(@NotNull String test,
-                                Scheduler scheduler,
-                                AccessType dataBaseAccessType,
-                                Boolean useQueue,
+                                @NotNull Scheduler scheduler,
+                                @NotNull AccessType dataBaseAccessType,
+                                @NotNull Boolean useQueue,
                                 String queueName,
                                 String exchangeName,
                                 String routingKey) {

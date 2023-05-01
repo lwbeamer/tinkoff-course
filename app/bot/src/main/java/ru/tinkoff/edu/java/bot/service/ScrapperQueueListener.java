@@ -25,6 +25,7 @@ public class ScrapperQueueListener {
     @RabbitHandler
     public void receiver(LinkUpdate update) {
         log.info("Сообщение об обновлении получено: "+update);
+//        throw new RuntimeException("test exception");
         updateService.updateLink(update);
     }
 
