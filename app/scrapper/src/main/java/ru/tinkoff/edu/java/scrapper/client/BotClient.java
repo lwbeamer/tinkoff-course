@@ -7,9 +7,10 @@ import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 import ru.tinkoff.edu.java.scrapper.dto.LinkUpdate;
 import ru.tinkoff.edu.java.scrapper.exception.BotClientException;
+import ru.tinkoff.edu.java.scrapper.service.UpdateNotificationService;
 
 @Slf4j
-public class BotClient {
+public class BotClient implements UpdateNotificationService {
 
     @Value("${bot.baseurl}")
     private String botBaseUrl;

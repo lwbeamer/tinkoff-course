@@ -2,14 +2,11 @@ package ru.tinkoff.edu.java.scrapper.service.jpa.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Primary;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import parser.LinkParser;
 import result.GithubParseResult;
 import result.ParseResult;
 import result.StackOverflowParseResult;
-import ru.tinkoff.edu.java.scrapper.client.BotClient;
 import ru.tinkoff.edu.java.scrapper.client.GitHubClient;
 import ru.tinkoff.edu.java.scrapper.client.StackOverflowClient;
 import ru.tinkoff.edu.java.scrapper.dto.GitHubResponse;
@@ -20,6 +17,7 @@ import ru.tinkoff.edu.java.scrapper.exception.StackOverflowRequestException;
 import ru.tinkoff.edu.java.scrapper.model.commonDto.Link;
 import ru.tinkoff.edu.java.scrapper.model.jpa.LinkEntity;
 import ru.tinkoff.edu.java.scrapper.repository.jpa.JpaLinkRepository;
+import ru.tinkoff.edu.java.scrapper.service.UpdateNotificationService;
 import ru.tinkoff.edu.java.scrapper.service.contract.LinkUpdateService;
 
 import java.sql.Timestamp;
@@ -35,35 +33,34 @@ public class JpaLinkUpdateServiceImpl implements LinkUpdateService {
     private final JpaLinkRepository linkRepository;
 
 
-
     private final LinkParser linkParser;
 
     private final GitHubClient gitHubClient;
 
     private final StackOverflowClient stackOverflowClient;
 
-    private final BotClient botClient;
+    private final UpdateNotificationService notificationService;
 
 
-    public JpaLinkUpdateServiceImpl(JpaLinkRepository linkRepository, LinkParser linkParser, GitHubClient gitHubClient, StackOverflowClient stackOverflowClient, BotClient botClient) {
+    public JpaLinkUpdateServiceImpl(JpaLinkRepository linkRepository, LinkParser linkParser, GitHubClient gitHubClient, StackOverflowClient stackOverflowClient, UpdateNotificationService notificationService) {
         this.linkRepository = linkRepository;
         this.linkParser = linkParser;
         this.gitHubClient = gitHubClient;
         this.stackOverflowClient = stackOverflowClient;
-        this.botClient = botClient;
+        this.notificationService = notificationService;
     }
 
     @Override
     public List<Link> getOldLinks() {
         log.info("getOldLinks() method invocation in JpaLinkUpdateServiceImpl");
-        Timestamp compareDate = new Timestamp(System.currentTimeMillis() - timeUpdateDeltaInSeconds*1000);
+        Timestamp compareDate = new Timestamp(System.currentTimeMillis() - timeUpdateDeltaInSeconds * 1000);
         return linkRepository.findByCheckedAtLessThanOrderByCheckedAtDesc(compareDate).stream().map(Link::fromEntity).toList();
     }
 
 
     //внутренний вспомогательный метод реализации, в контракте его нет
     public List<LinkEntity> getOldEntityLinks() {
-        Timestamp compareDate = new Timestamp(System.currentTimeMillis() - timeUpdateDeltaInSeconds*1000);
+        Timestamp compareDate = new Timestamp(System.currentTimeMillis() - timeUpdateDeltaInSeconds * 1000);
         return linkRepository.findByCheckedAtLessThanOrderByCheckedAtDesc(compareDate);
     }
 
@@ -88,7 +85,10 @@ public class JpaLinkUpdateServiceImpl implements LinkUpdateService {
 
                     if (link.getGhForksCount() == null || response.forksCount() != link.getGhForksCount()) {
                         isUpdated = true;
-                        if (link.getGhForksCount() == null) {link.setGhForksCount(0); isUpdated = false;}
+                        if (link.getGhForksCount() == null) {
+                            link.setGhForksCount(0);
+                            isUpdated = false;
+                        }
                         if (isUpdated && response.forksCount() < link.getGhForksCount()) {
                             updateDescription += "В репозитории уменьшилось кол-во форков\n";
                         }
@@ -117,7 +117,7 @@ public class JpaLinkUpdateServiceImpl implements LinkUpdateService {
 
                     if (isUpdated) {
                         List<Long> chatsIds = linkRepository.findChatIdsByLinkId(link.getId());
-                        botClient.updateLink(new LinkUpdate(link.getId(), link.getUrl(), "Вышли обновления в репозитории:\n"+updateDescription, chatsIds.toArray(new Long[0])));
+                        notificationService.updateLink(new LinkUpdate(link.getId(), link.getUrl(), "Вышли обновления в репозитории:\n" + updateDescription, chatsIds.toArray(new Long[0])));
                     }
 
 
@@ -136,8 +136,6 @@ public class JpaLinkUpdateServiceImpl implements LinkUpdateService {
                     StackOverflowItem response = stackOverflowClient.fetchQuestion(((StackOverflowParseResult) result).id());
                     System.out.println(response);
 
-
-
                     if (response.lastEditDate() != null && (link.getSoLastEditDate() == null || response.lastEditDate().isAfter(link.getSoLastEditDate().toLocalDateTime().atOffset(ZoneOffset.UTC)))) {
                         if (link.getSoLastEditDate() != null) isUpdated = true;
                         link.setSoLastEditDate(new Timestamp(response.lastEditDate().toInstant().toEpochMilli()));
@@ -146,7 +144,10 @@ public class JpaLinkUpdateServiceImpl implements LinkUpdateService {
 
                     if (link.getSoAnswerCount() == null || response.answerCount() != link.getSoAnswerCount()) {
                         isUpdated = true;
-                        if (link.getSoAnswerCount() == null) {link.setSoAnswerCount(0); isUpdated = false;}
+                        if (link.getSoAnswerCount() == null) {
+                            link.setSoAnswerCount(0);
+                            isUpdated = false;
+                        }
                         if (isUpdated && response.answerCount() < link.getSoAnswerCount()) {
                             updateDescription += "На вопрос уменьшилось кол-во ответов\n";
                         }
@@ -163,7 +164,7 @@ public class JpaLinkUpdateServiceImpl implements LinkUpdateService {
 
                     if (isUpdated) {
                         List<Long> chatsIds = linkRepository.findChatIdsByLinkId(link.getId());
-                        botClient.updateLink(new LinkUpdate(link.getId(), link.getUrl(), "Вышли обновления в вопросе:\n"+updateDescription, chatsIds.toArray(new Long[0])));
+                        notificationService.updateLink(new LinkUpdate(link.getId(), link.getUrl(), "Вышли обновления в вопросе:\n" + updateDescription, chatsIds.toArray(new Long[0])));
                     }
 
                 } catch (StackOverflowRequestException e) {

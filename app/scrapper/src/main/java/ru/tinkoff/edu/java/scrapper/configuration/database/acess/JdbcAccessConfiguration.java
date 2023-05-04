@@ -18,6 +18,7 @@ import ru.tinkoff.edu.java.scrapper.repository.jdbc.UserJdbcTemplateRepository;
 import ru.tinkoff.edu.java.scrapper.repository.jdbcAndJooqContract.LinkRepository;
 import ru.tinkoff.edu.java.scrapper.repository.jdbcAndJooqContract.SubscriptionRepository;
 import ru.tinkoff.edu.java.scrapper.repository.jdbcAndJooqContract.UserRepository;
+import ru.tinkoff.edu.java.scrapper.service.UpdateNotificationService;
 import ru.tinkoff.edu.java.scrapper.service.contract.LinkUpdateService;
 import ru.tinkoff.edu.java.scrapper.service.contract.SubscriptionService;
 import ru.tinkoff.edu.java.scrapper.service.contract.TgChatService;
@@ -66,7 +67,7 @@ public class JdbcAccessConfiguration {
             LinkParser linkParser,
             GitHubClient gitHubClient,
             StackOverflowClient stackOverflowClient,
-            BotClient botClient
+            UpdateNotificationService notificationService
     ) {
         return new LinkUpdateServiceImpl(
                 linkRepository,
@@ -74,7 +75,8 @@ public class JdbcAccessConfiguration {
                 linkParser,
                 gitHubClient,
                 stackOverflowClient,
-                botClient);
+                notificationService);
+
     }
 
     @Bean

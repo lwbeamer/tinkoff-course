@@ -1,8 +1,6 @@
 package ru.tinkoff.edu.java.scrapper.service.jpa.impl;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.annotation.Primary;
-import org.springframework.stereotype.Service;
 import ru.tinkoff.edu.java.scrapper.exception.ChatAlreadyExistException;
 import ru.tinkoff.edu.java.scrapper.exception.ChatNotFoundException;
 import ru.tinkoff.edu.java.scrapper.model.commonDto.User;
@@ -24,7 +22,7 @@ public class JpaTgChatServiceImpl implements TgChatService {
 
     @Override
     public void register(User user) {
-        log.info("register() method invocation in JpaTgChatServiceImpl. User chatId = "+user.getChatId());
+        log.info("register() method invocation in JpaTgChatServiceImpl. User chatId = " + user.getChatId());
         Optional<UserEntity> optionalUser = userRepository.findById(user.getChatId());
         if (optionalUser.isPresent()) throw new ChatAlreadyExistException("Такой чат уже зарегистрирован!");
         userRepository.save(User.toEntity(user));
@@ -32,12 +30,10 @@ public class JpaTgChatServiceImpl implements TgChatService {
 
     @Override
     public void unregister(Long chatId) {
-        log.info("unregister() method invocation in JpaTgChatServiceImpl. User chatId = "+chatId);
+        log.info("unregister() method invocation in JpaTgChatServiceImpl. User chatId = " + chatId);
         Optional<UserEntity> optionalUser = userRepository.findById(chatId);
         if (optionalUser.isEmpty()) throw new ChatNotFoundException("Такой чат не зарегистрирован!");
         userRepository.delete(optionalUser.get());
     }
-
-
 
 }

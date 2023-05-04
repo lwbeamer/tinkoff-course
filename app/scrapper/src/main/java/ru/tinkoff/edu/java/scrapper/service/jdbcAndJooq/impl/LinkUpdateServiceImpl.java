@@ -19,6 +19,7 @@ import ru.tinkoff.edu.java.scrapper.model.commonDto.Link;
 import ru.tinkoff.edu.java.scrapper.model.jdbcAndJooq.Relation;
 import ru.tinkoff.edu.java.scrapper.repository.jdbcAndJooqContract.LinkRepository;
 import ru.tinkoff.edu.java.scrapper.repository.jdbcAndJooqContract.SubscriptionRepository;
+import ru.tinkoff.edu.java.scrapper.service.UpdateNotificationService;
 import ru.tinkoff.edu.java.scrapper.service.contract.LinkUpdateService;
 
 import java.sql.Timestamp;
@@ -42,16 +43,16 @@ public class LinkUpdateServiceImpl implements LinkUpdateService {
 
     private final StackOverflowClient stackOverflowClient;
 
-    private final BotClient botClient;
 
+    private final UpdateNotificationService notificationService;
 
-    public LinkUpdateServiceImpl(LinkRepository linkRepository, SubscriptionRepository subscriptionRepository, LinkParser linkParser, GitHubClient gitHubClient, StackOverflowClient stackOverflowClient, BotClient botClient) {
+    public LinkUpdateServiceImpl(LinkRepository linkRepository, SubscriptionRepository subscriptionRepository, LinkParser linkParser, GitHubClient gitHubClient, StackOverflowClient stackOverflowClient, UpdateNotificationService notificationService) {
         this.linkRepository = linkRepository;
         this.subscriptionRepository = subscriptionRepository;
         this.linkParser = linkParser;
         this.gitHubClient = gitHubClient;
         this.stackOverflowClient = stackOverflowClient;
-        this.botClient = botClient;
+        this.notificationService = notificationService;
     }
 
     @Override
@@ -102,7 +103,7 @@ public class LinkUpdateServiceImpl implements LinkUpdateService {
 
                     if (isUpdated) {
                         Long[] chats = subscriptionRepository.findChatsByLink(link.getId()).stream().map(Relation::getChatId).toArray(Long[]::new);
-                        botClient.updateLink(new LinkUpdate(link.getId(), link.getUrl(), "Вышли обновления в репозитории:\n" + updateDescription, chats));
+                        notificationService.updateLink(new LinkUpdate(link.getId(), link.getUrl(), "Вышли обновления в репозитории:\n" + updateDescription, chats));
                     }
 
 
@@ -139,7 +140,7 @@ public class LinkUpdateServiceImpl implements LinkUpdateService {
 
                     if (isUpdated) {
                         Long[] chats = subscriptionRepository.findChatsByLink(link.getId()).stream().map(Relation::getChatId).toArray(Long[]::new);
-                        botClient.updateLink(new LinkUpdate(link.getId(), link.getUrl(), "Вышли обновления в вопросе:\n" + updateDescription, chats));
+                        notificationService.updateLink(new LinkUpdate(link.getId(), link.getUrl(), "Вышли обновления в вопросе:\n" + updateDescription, chats));
                     }
 
                 } catch (StackOverflowRequestException e) {
