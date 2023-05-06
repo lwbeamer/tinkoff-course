@@ -34,10 +34,10 @@ jobs:
           distribution: 'temurin'
           cache: maven
       - name: Build with Maven
-        run: mvn package -pl scrapper -am
+        run: mvn package -pl scrapper -am -DskipTests
         working-directory: app
       - name: Build Docker image
-        run: docker build -t scrapper-image -f scrapper/Dockerfile
+        run: docker build -t scrapper-image -f scrapper/Dockerfile .
 
 
 #        run: mvn package -pl app/scrapper -am
