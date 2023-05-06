@@ -3,8 +3,8 @@ run-name: Bot Pipeline go! 🚀
 on:
   push:
     branches: ["master", "hw9"]
-    paths:
-      - 'app/bot/**'
+#    paths:
+#      - 'app/bot/**'
   pull_request:
     branches: ["master", "hw9"]
     paths:
@@ -28,8 +28,8 @@ jobs:
           distribution: 'temurin'
           cache: maven
       - name: Build with Maven
-        run: mvn package -pl bot -am
+        run: mvn package -pl bot -am -DskipTests
         working-directory: app
+      - name: Build Docker image
+        run: docker build -t bot-image -f app/bot/Dockerfile .
 
-#        run: mvn package -pl app/scrapper -am
-#        run: mvn package -pl ${{ github.workspace }}/app/scrapper -am

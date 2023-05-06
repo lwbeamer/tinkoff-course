@@ -13,9 +13,6 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-#    defaults:
-#      run:
-#        working-directory: app
     steps:
       - run: echo "🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
       - run: echo "🔎 The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
@@ -24,9 +21,6 @@ jobs:
       - name: List files in the repository
         run: |
           ls -la ${{ github.workspace }}
-      - name: List files in the repository v2
-        run: |
-          ls -la ${{ github.workspace }}/app
       - name: Set up Java 17
         uses: actions/setup-java@v3
         with:
@@ -38,7 +32,3 @@ jobs:
         working-directory: app
       - name: Build Docker image
         run: docker build -t scrapper-image -f app/scrapper/Dockerfile .
-
-
-#        run: mvn package -pl app/scrapper -am
-#        run: mvn package -pl ${{ github.workspace }}/app/scrapper -am
