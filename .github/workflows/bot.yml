@@ -58,6 +58,7 @@ jobs:
         run: docker push ${{ env.REGISTRY }}/${{ github.actor }}/bot-image
 
   code-check:
+    runs-on: ubuntu-latest
     steps:
       - name: Build with Maven and check
         run: mvn package -pl bot -am checkstyle:check

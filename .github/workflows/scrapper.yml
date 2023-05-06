@@ -57,6 +57,7 @@ jobs:
         run: docker push ${{ env.REGISTRY }}/${{ github.actor }}/scrapper-image
 
   code-check:
+    runs-on: ubuntu-latest
     steps:
       - name: Build with Maven and check
         run: mvn package -pl scrapper -am checkstyle:check
