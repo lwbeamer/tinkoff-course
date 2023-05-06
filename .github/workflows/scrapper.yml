@@ -3,8 +3,8 @@ run-name: Scrapper Pipeline go! 🚀
 on:
   push:
     branches: ["master", "hw9"]
-    paths:
-      - 'app/scrapper/**'
+#    paths:
+#      - 'app/scrapper/**'
   pull_request:
     branches: ["master", "hw9"]
     paths:
@@ -36,6 +36,9 @@ jobs:
       - name: Build with Maven
         run: mvn package -pl scrapper -am
         working-directory: app
+      - name: Build Docker image
+        run: docker build -t scrapper-image -f scrapper.Dockerfile
+
 
 #        run: mvn package -pl app/scrapper -am
 #        run: mvn package -pl ${{ github.workspace }}/app/scrapper -am
