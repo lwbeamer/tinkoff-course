@@ -11,7 +11,7 @@ on:
       - 'app/scrapper/**'
 
 env:
-  REGISTRY: ghcr.io
+  REGISTRY: ghcr.io/lwbeamer
 
 jobs:
   build:
