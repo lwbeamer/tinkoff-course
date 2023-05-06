@@ -11,7 +11,7 @@ on:
       - 'app/scrapper/**'
 
 env:
-  REGISTRY: ghcr.io/lwbeamer
+  REGISTRY: ghcr.io
 
 jobs:
   build:
@@ -39,6 +39,8 @@ jobs:
 
       - name: Build Docker image
         run: docker build -t ${{ env.REGISTRY }}/${{ github.actor }}/scrapper-image -f app/scrapper/Dockerfile .
+
+      - run: echo "${{ secrets.GITHUB_TOKEN }}"
 
       - name: Log in to the Container registry
         uses: docker/login-action@65b78e6e13532edd9afa3aa52ac7964289d1a9c1
