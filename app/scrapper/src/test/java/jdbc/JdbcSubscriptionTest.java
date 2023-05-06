@@ -22,7 +22,7 @@ import ru.tinkoff.edu.java.scrapper.repository.jdbcAndJooqContract.SubscriptionR
 import java.sql.Timestamp;
 import java.util.List;
 
-@SpringBootTest(classes = {ScrapperApplication.class, TestConfiguration.class, JdbcAccessConfiguration.class})
+@SpringBootTest(properties = {"app.data-base-access-type=jdbc"},classes = {ScrapperApplication.class, TestConfiguration.class, JdbcAccessConfiguration.class})
 public class JdbcSubscriptionTest extends IntegrationEnvironment {
 
     @Autowired

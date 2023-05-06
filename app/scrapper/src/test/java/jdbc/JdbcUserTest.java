@@ -18,7 +18,7 @@ import ru.tinkoff.edu.java.scrapper.repository.jdbcAndJooqContract.UserRepositor
 
 import java.util.List;
 
-@SpringBootTest(classes = {ScrapperApplication.class, TestConfiguration.class, JdbcAccessConfiguration.class})
+@SpringBootTest(properties = {"app.data-base-access-type=jdbc"},classes = {ScrapperApplication.class, TestConfiguration.class, JdbcAccessConfiguration.class})
 public class JdbcUserTest extends IntegrationEnvironment {
 
     @Autowired

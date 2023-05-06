@@ -5,4 +5,7 @@ import org.springframework.boot.autoconfigure.liquibase.LiquibaseAutoConfigurati
 
 @EnableAutoConfiguration(exclude = { LiquibaseAutoConfiguration.class })
 public class TestConfiguration {
+
+
+
 }
