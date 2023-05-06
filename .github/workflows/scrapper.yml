@@ -3,8 +3,8 @@ run-name: Scrapper Pipeline go! 🚀
 on:
   push:
     branches: [ "master", "hw9" ]
-    paths:
-      - 'app/scrapper/**'
+#    paths:
+#      - 'app/scrapper/**'
   pull_request:
     branches: [ "master", "hw9" ]
     paths:
@@ -56,3 +56,7 @@ jobs:
       - name: Push Docker image to GH Packages
         run: docker push ${{ env.REGISTRY }}/${{ github.actor }}/scrapper-image
 
+  code-check:
+    - name: Build with Maven and check
+      run: mvn package -pl scrapper -am checkstyle:check
+      working-directory: app

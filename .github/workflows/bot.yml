@@ -3,8 +3,8 @@ run-name: Bot Pipeline go! 🚀
 on:
   push:
     branches: [ "master", "hw9" ]
-    paths:
-      - 'app/bot/**'
+#    paths:
+#      - 'app/bot/**'
   pull_request:
     branches: [ "master", "hw9" ]
     paths:
@@ -57,3 +57,7 @@ jobs:
       - name: Push Docker image to GH Packages
         run: docker push ${{ env.REGISTRY }}/${{ github.actor }}/bot-image
 
+  code-check:
+    - name: Build with Maven and check
+      run: mvn package -pl bot -am checkstyle:check
+      working-directory: app
