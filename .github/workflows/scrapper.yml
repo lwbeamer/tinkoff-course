@@ -41,8 +41,8 @@ jobs:
         working-directory: app
 
       - name: Build Docker image
-        run: docker build -t ${{ env.REGISTRY }}/scrapper-image -f app/scrapper/Dockerfile .
-#        run: docker build -t ${{ env.REGISTRY }}/${{ github.actor }}/scrapper-image -f app/scrapper/Dockerfile .
+#        run: docker build -t ${{ env.REGISTRY }}/scrapper-image -f app/scrapper/Dockerfile .
+        run: docker build -t ${{ env.REGISTRY }}/${{ github.actor }}/scrapper-image -f app/scrapper/Dockerfile .
 
       - run: echo "${{ secrets.GITHUB_TOKEN }}"
 
@@ -54,5 +54,6 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Push Docker image to GH Packages
-        run: docker push ${{ env.REGISTRY }}/scrapper-image
+#        run: docker push ${{ env.REGISTRY }}/scrapper-image
+        run: docker push ${{ env.REGISTRY }}/${{ github.actor }}/scrapper-image
 
