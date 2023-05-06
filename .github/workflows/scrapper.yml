@@ -24,5 +24,8 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
           cache: maven
+      - name: List files in the repository v2
+        run: |
+          ls ${{ github.workspace }}  
       - name: Build with Maven
-        run: mvn package -pl scrapper -am
+        run: mvn package -pl ${{ github.workspace }}/app/scrapper -am
