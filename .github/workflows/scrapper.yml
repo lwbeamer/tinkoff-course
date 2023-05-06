@@ -37,7 +37,7 @@ jobs:
         run: mvn package -pl scrapper -am -DskipTests
         working-directory: app
       - name: Build Docker image
-        run: docker build -t scrapper-image -f scrapper/Dockerfile .
+        run: docker build -t scrapper-image -f app/scrapper/Dockerfile .
 
 
 #        run: mvn package -pl app/scrapper -am
