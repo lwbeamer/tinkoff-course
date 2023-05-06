@@ -59,6 +59,9 @@ jobs:
   code-check:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
       - name: Build with Maven and check
         run: mvn package -pl scrapper -am checkstyle:check
         working-directory: app
