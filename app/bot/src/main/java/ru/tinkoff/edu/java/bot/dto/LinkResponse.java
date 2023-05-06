@@ -6,9 +6,9 @@ public record LinkResponse(long id, URI url) {
 
     @Override
     public String toString() {
-        return "LinkResponse{" +
-                "id=" + id +
-                ", url=" + url +
-                '}';
+        return "LinkResponse{"
+            + "id=" + id
+            + ", url='" + url + "'"
+            + "}";
     }
 }

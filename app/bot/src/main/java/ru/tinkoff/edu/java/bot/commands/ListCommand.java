@@ -32,16 +32,16 @@ public class ListCommand implements Command {
         try {
             ListLinkResponse response = scrapperClient.getLinks(chatId);
             StringBuilder msg = new StringBuilder();
-            if (response.size() == 0)
+            if (response.size() == 0) {
                 msg.append("Список отслеживаемых ссылок пуст!");
-            else {
+            } else {
                 msg.append("Ссылок отслеживается - ").append(response.size()).append("\n\n");
                 for (Link link : response.links()) {
                     msg.append(link.url()).append("\n\n");
                 }
             }
             return msg.toString();
-        } catch (ScrapperClientException e){
+        } catch (ScrapperClientException e) {
             return e.getMessage();
         }
     }

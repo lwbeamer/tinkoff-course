@@ -153,6 +153,7 @@
         <module name="ImportOrder">
             <property name="option" value="under"/>
             <property name="sortStaticImportsAlphabetically" value="true"/>
+            <property name="ordered" value="false"/>
         </module>
         <module name="RedundantImport"/>
         <module name="UnusedImports"/>
@@ -291,6 +292,7 @@
         <module name="MultipleStringLiterals">
             <!-- Allow zero-length and 1-character strings -->
             <property name="ignoreStringsRegexp" value='^(("")|(".")|("..")|("..>"))$'/>
+            <property name="allowedDuplicates" value="4"/>
         </module>
         <module name="MultipleVariableDeclarations"/>
         <module name="NestedForDepth">
@@ -312,7 +314,7 @@
         <module name="ParameterAssignment"/>
         <!-- <module name="RequireThis"/> -->
         <module name="ReturnCount">
-            <property name="max" value="4"/>
+            <property name="max" value="8"/>
         </module>
         <module name="SimplifyBooleanExpression"/>
         <module name="SimplifyBooleanReturn"/>

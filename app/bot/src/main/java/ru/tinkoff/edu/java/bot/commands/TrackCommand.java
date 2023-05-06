@@ -34,10 +34,12 @@ public class TrackCommand implements Command {
         long chatId = update.message().chat().id();
         String msg;
         try {
-            if (parser.parseUrl(update.message().text()) != null){
+            if (parser.parseUrl(update.message().text()) != null) {
                 scrapperClient.addLink(chatId, new AddLinkRequest(update.message().text()));
                 msg = "Ссылка успешно добавлена";
-            } else msg = "Некорректная ссылка";
+            } else {
+                msg = "Некорректная ссылка";
+            }
             return msg;
         } catch (ScrapperClientException e) {
             return e.getMessage();

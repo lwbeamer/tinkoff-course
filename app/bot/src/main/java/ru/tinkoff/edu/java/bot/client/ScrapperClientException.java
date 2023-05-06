@@ -1,6 +1,6 @@
 package ru.tinkoff.edu.java.bot.client;
 
-public class ScrapperClientException extends RuntimeException{
+public class ScrapperClientException extends RuntimeException {
 
     public ScrapperClientException() {
     }
