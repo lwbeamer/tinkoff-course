@@ -7,20 +7,16 @@ import ru.tinkoff.edu.java.scrapper.model.jdbcAndJooq.Relation;
 import ru.tinkoff.edu.java.scrapper.repository.jdbcAndJooqContract.LinkRepository;
 import ru.tinkoff.edu.java.scrapper.repository.jdbcAndJooqContract.SubscriptionRepository;
 import ru.tinkoff.edu.java.scrapper.service.contract.SubscriptionService;
-
 import java.net.URI;
 import java.sql.Timestamp;
 import java.util.List;
 
-
 @Slf4j
 public class SubscriptionServiceImpl implements SubscriptionService {
-
 
     private final LinkRepository linkRepository;
 
     private final SubscriptionRepository subscriptionRepository;
-
 
     public SubscriptionServiceImpl(LinkRepository linkRepository, SubscriptionRepository subscriptionRepository) {
         this.linkRepository = linkRepository;
@@ -30,7 +26,9 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     @Override
     @Transactional
     public Link subscribe(Long chatId, URI url) {
-        log.info("subscribe() method invocation in SubscriptionServiceImpl. chatId = " + chatId + " url = " + url.toString());
+        log.info("subscribe() method invocation in SubscriptionServiceImpl. chatId = "
+            + chatId
+            + " url = " + url.toString());
         Link link = linkRepository.findByUrl(url.toString());
         if (link == null) {
             link = new Link();
@@ -54,7 +52,8 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     @Override
     @Transactional
     public Link unsubscribe(Long chatId, URI url) {
-        log.info("unsubscribe() method invocation in SubscriptionServiceImpl. chatId = " + chatId + " url = " + url.toString());
+        log.info("unsubscribe() method invocation in SubscriptionServiceImpl. chatId = " + chatId
+            + " url = " + url.toString());
         Link link = linkRepository.findByUrl(url.toString());
 
         if (link != null) {

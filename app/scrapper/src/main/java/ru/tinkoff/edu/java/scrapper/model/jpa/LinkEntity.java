@@ -1,17 +1,18 @@
 package ru.tinkoff.edu.java.scrapper.model.jpa;
 
-
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.Data;
-
 import java.sql.Timestamp;
-import java.util.List;
 
 @Entity
 @Table(name = "link")
 @Data
 public class LinkEntity {
-
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,6 +38,5 @@ public class LinkEntity {
 
     @Column(name = "so_answer_count")
     private Integer soAnswerCount;
-
 
 }

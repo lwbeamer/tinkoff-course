@@ -1,12 +1,10 @@
 package ru.tinkoff.edu.java.scrapper.configuration.database.acess;
 
-
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.JdbcTemplate;
 import parser.LinkParser;
-import ru.tinkoff.edu.java.scrapper.client.BotClient;
 import ru.tinkoff.edu.java.scrapper.client.GitHubClient;
 import ru.tinkoff.edu.java.scrapper.client.StackOverflowClient;
 import ru.tinkoff.edu.java.scrapper.mapper.LinkRowMapper;
@@ -51,7 +49,10 @@ public class JdbcAccessConfiguration {
     }
 
     @Bean
-    public SubscriptionRepository subscriptionRepository(JdbcTemplate jdbcTemplate, SubscriptionRowMapper subscriptionRowMapper) {
+    public SubscriptionRepository subscriptionRepository(
+        JdbcTemplate jdbcTemplate,
+        SubscriptionRowMapper subscriptionRowMapper
+    ) {
         return new SubscriptionJdbcTemplateRepository(jdbcTemplate, subscriptionRowMapper, linkRowMapper());
     }
 
@@ -62,40 +63,43 @@ public class JdbcAccessConfiguration {
 
     @Bean
     public LinkUpdateService linkUpdateService(
-            LinkRepository linkRepository,
-            SubscriptionRepository subscriptionRepository,
-            LinkParser linkParser,
-            GitHubClient gitHubClient,
-            StackOverflowClient stackOverflowClient,
-            UpdateNotificationService notificationService
+        LinkRepository linkRepository,
+        SubscriptionRepository subscriptionRepository,
+        LinkParser linkParser,
+        GitHubClient gitHubClient,
+        StackOverflowClient stackOverflowClient,
+        UpdateNotificationService notificationService
     ) {
         return new LinkUpdateServiceImpl(
-                linkRepository,
-                subscriptionRepository,
-                linkParser,
-                gitHubClient,
-                stackOverflowClient,
-                notificationService);
+            linkRepository,
+            subscriptionRepository,
+            linkParser,
+            gitHubClient,
+            stackOverflowClient,
+            notificationService
+        );
 
     }
 
     @Bean
     public SubscriptionService subscriptionService(
-            LinkRepository linkRepository,
-            SubscriptionRepository subscriptionRepository
+        LinkRepository linkRepository,
+        SubscriptionRepository subscriptionRepository
     ) {
         return new SubscriptionServiceImpl(
-                linkRepository,
-                subscriptionRepository);
+            linkRepository,
+            subscriptionRepository
+        );
     }
 
     @Bean
     public TgChatService tgChatService(
-            UserRepository userRepository,
-            SubscriptionRepository subscriptionRepository
+        UserRepository userRepository,
+        SubscriptionRepository subscriptionRepository
     ) {
         return new TgChatServiceImpl(
-                userRepository,
-                subscriptionRepository);
+            userRepository,
+            subscriptionRepository
+        );
     }
 }

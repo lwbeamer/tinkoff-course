@@ -2,11 +2,11 @@ name: Scrapper Actions
 run-name: Scrapper Pipeline go! 🚀
 on:
   push:
-    branches: ["master", "hw9"]
-#    paths:
-#      - 'app/scrapper/**'
+    branches: [ "master", "hw9" ]
+    paths:
+      - 'app/scrapper/**'
   pull_request:
-    branches: ["master", "hw9"]
+    branches: [ "master", "hw9" ]
     paths:
       - 'app/scrapper/**'
 
@@ -22,7 +22,10 @@ jobs:
     steps:
       - run: echo "🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
       - run: echo "🔎 The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
-      - uses: actions/checkout@v3
+
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
       - run: echo "💡 The ${{ github.repository }} repository has been cloned to the runner."
 
       - name: List files in the repository
@@ -37,14 +40,11 @@ jobs:
           cache: maven
 
       - name: Build with Maven
-        run: mvn package -pl scrapper -am -DskipTests
+        run: mvn package -pl scrapper -am
         working-directory: app
 
       - name: Build Docker image
-#        run: docker build -t ${{ env.REGISTRY }}/scrapper-image -f app/scrapper/Dockerfile .
         run: docker build -t ${{ env.REGISTRY }}/${{ github.actor }}/scrapper-image -f app/scrapper/Dockerfile .
-
-      - run: echo "${{ secrets.GITHUB_TOKEN }}"
 
       - name: Log in to the Container registry
         uses: docker/login-action@65b78e6e13532edd9afa3aa52ac7964289d1a9c1
@@ -54,6 +54,5 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Push Docker image to GH Packages
-#        run: docker push ${{ env.REGISTRY }}/scrapper-image
         run: docker push ${{ env.REGISTRY }}/${{ github.actor }}/scrapper-image
 

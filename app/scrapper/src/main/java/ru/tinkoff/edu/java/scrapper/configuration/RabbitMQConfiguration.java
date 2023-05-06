@@ -1,7 +1,11 @@
 package ru.tinkoff.edu.java.scrapper.configuration;
 
-
-import org.springframework.amqp.core.*;
+import org.springframework.amqp.core.AmqpTemplate;
+import org.springframework.amqp.core.Binding;
+import org.springframework.amqp.core.BindingBuilder;
+import org.springframework.amqp.core.DirectExchange;
+import org.springframework.amqp.core.Queue;
+import org.springframework.amqp.core.QueueBuilder;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.amqp.support.converter.MessageConverter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -22,9 +26,9 @@ public class RabbitMQConfiguration {
     @Bean
     Queue queue() {
         return QueueBuilder.durable(config.queueName())
-                .withArgument("x-dead-letter-exchange", config.exchangeName())
-                .withArgument("x-dead-letter-routing-key", config.routingKey() + ".dlq")
-                .build();
+            .withArgument("x-dead-letter-exchange", config.exchangeName())
+            .withArgument("x-dead-letter-routing-key", config.routingKey() + ".dlq")
+            .build();
     }
 
     @Bean
@@ -41,7 +45,6 @@ public class RabbitMQConfiguration {
     public MessageConverter jsonMessageConverter() {
         return new Jackson2JsonMessageConverter();
     }
-
 
     @Bean
     public ScrapperQueueProducer scrapperQueueProducer(AmqpTemplate rabbitTemplate) {

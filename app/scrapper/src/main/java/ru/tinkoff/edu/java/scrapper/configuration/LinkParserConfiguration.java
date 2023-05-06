@@ -8,7 +8,7 @@ import parser.LinkParser;
 public class LinkParserConfiguration {
 
     @Bean
-    public LinkParser linkParser(){
+    public LinkParser linkParser() {
         return new LinkParser();
     }
 }
