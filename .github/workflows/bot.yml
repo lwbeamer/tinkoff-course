@@ -42,7 +42,8 @@ jobs:
         working-directory: app
 
       - name: Build Docker image
-        run: docker build -t ${{ env.REGISTRY }}/${{ github.actor }}/bot-image -f app/bot/Dockerfile .
+        run: docker build -t ${{ env.REGISTRY }}/bot-image -f app/bot/Dockerfile .
+#        run: docker build -t ${{ env.REGISTRY }}/${{ github.actor }}/bot-image -f app/bot/Dockerfile .
 
       - name: Log in to the Container registry
         uses: docker/login-action@65b78e6e13532edd9afa3aa52ac7964289d1a9c1
