@@ -51,5 +51,5 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Push Docker image to GH Packages
-        run: docker push ${{ env.REGISTRY }}/${{ github.actor }}/scrapper-image
+        run: docker push ${{ env.REGISTRY }}/scrapper-image
 

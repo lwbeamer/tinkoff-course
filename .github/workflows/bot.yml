@@ -53,5 +53,5 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Push Docker image to GH Packages
-        run: docker push ${{ env.REGISTRY }}/${{ github.actor }}/bot-image
+        run: docker push ${{ env.REGISTRY }}/bot-image
         
