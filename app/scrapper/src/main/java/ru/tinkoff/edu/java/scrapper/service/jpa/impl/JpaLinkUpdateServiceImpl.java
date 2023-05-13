@@ -94,6 +94,8 @@ public class JpaLinkUpdateServiceImpl implements LinkUpdateService {
                 ((GithubParseResult) result).repository()
             );
 
+            log.info("Github response: " + response.toString());
+
             if (link.getGhForksCount() == null || response.forksCount() != link.getGhForksCount()) {
                 isUpdated = true;
                 if (link.getGhForksCount() == null) {
