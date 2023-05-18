@@ -18,6 +18,7 @@ public class Bot implements AutoCloseable {
     private final TelegramBot bot;
     private final UserMessageProcessor userMessageProcessor;
 
+
     Counter messagesCounter = Metrics.counter("processed_messages", "application", "bot");
 
     @PostConstruct

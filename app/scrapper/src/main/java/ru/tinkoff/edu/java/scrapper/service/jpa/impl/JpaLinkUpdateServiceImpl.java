@@ -164,7 +164,6 @@ public class JpaLinkUpdateServiceImpl implements LinkUpdateService {
                 link.setSoLastEditDate(new Timestamp(response.lastEditDate().toInstant().toEpochMilli()));
                 updateDescription += "Текст вопроса был изменён\n";
             }
-
             if (link.getSoAnswerCount() == null || response.answerCount() != link.getSoAnswerCount()) {
                 isUpdated = true;
                 if (link.getSoAnswerCount() == null) {
