@@ -2,11 +2,11 @@ name: Scrapper Actions
 run-name: Scrapper Pipeline go! 🚀
 on:
   push:
-    branches: [ "master", "hw9" ]
+    branches: [ "master", "hw9", "hw10"]
     paths:
       - 'app/scrapper/**'
   pull_request:
-    branches: [ "master", "hw9" ]
+    branches: [ "master", "hw9", "hw10"]
     paths:
       - 'app/scrapper/**'
 

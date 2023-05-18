@@ -2,11 +2,11 @@ name: Bot Actions
 run-name: Bot Pipeline go! 🚀
 on:
   push:
-    branches: [ "master", "hw9" ]
+    branches: [ "master", "hw9", "hw10"]
     paths:
       - 'app/bot/**'
   pull_request:
-    branches: [ "master", "hw9" ]
+    branches: [ "master", "hw9", "hw10"]
     paths:
       - 'app/bot/**'
 
