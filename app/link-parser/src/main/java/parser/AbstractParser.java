@@ -1,10 +1,7 @@
 package parser;
 
-import result.ParseResult;
-
-import java.net.MalformedURLException;
-import java.net.URISyntaxException;
 import java.net.URL;
+import result.ParseResult;
 
 public abstract class AbstractParser {
 
@@ -14,16 +11,5 @@ public abstract class AbstractParser {
         this.nextParser = nextParser;
     }
 
-    public abstract ParseResult parseResult(String url);
-
-    public final URL tweakUrl(String urlString) {
-        URL url;
-        try{
-            url = new URL(urlString);
-        } catch (MalformedURLException e){
-            System.out.println("Incorrect URL");
-            return null;
-        }
-        return url;
-    }
+    public abstract ParseResult parseResult(URL url);
 }

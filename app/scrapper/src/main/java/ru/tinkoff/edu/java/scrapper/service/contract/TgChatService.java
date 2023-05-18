@@ -8,8 +8,4 @@ public interface TgChatService {
 
     void unregister(Long chatId);
 
-
-
-
-
 }

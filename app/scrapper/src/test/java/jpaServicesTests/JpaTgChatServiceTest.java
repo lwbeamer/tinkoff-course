@@ -20,7 +20,7 @@ import ru.tinkoff.edu.java.scrapper.service.jpa.impl.JpaTgChatServiceImpl;
 
 import java.util.List;
 
-@SpringBootTest(classes = {ScrapperApplication.class, TestConfiguration.class, JpaAccessConfiguration.class, UserRowMapper.class})
+@SpringBootTest(properties = {"app.data-base-access-type=jpa"},classes = {ScrapperApplication.class, TestConfiguration.class, JpaAccessConfiguration.class, UserRowMapper.class})
 public class JpaTgChatServiceTest extends IntegrationEnvironment {
 
     @Autowired

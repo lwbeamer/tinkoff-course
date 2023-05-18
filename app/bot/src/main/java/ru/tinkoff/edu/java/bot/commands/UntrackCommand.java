@@ -8,13 +8,11 @@ import ru.tinkoff.edu.java.bot.client.ScrapperClientException;
 import ru.tinkoff.edu.java.bot.dto.RemoveLinkRequest;
 
 @Component
-public class UntrackCommand implements Command{
+public class UntrackCommand implements Command {
 
     private final ScrapperClient scrapperClient;
 
     private final LinkParser parser;
-
-
 
     public UntrackCommand(ScrapperClient scrapperClient, LinkParser parser) {
         this.scrapperClient = scrapperClient;
@@ -36,10 +34,12 @@ public class UntrackCommand implements Command{
         long chatId = update.message().chat().id();
         String msg;
         try {
-            if (parser.parseUrl(update.message().text()) != null){
+            if (parser.parseUrl(update.message().text()) != null) {
                 scrapperClient.deleteLink(chatId, new RemoveLinkRequest(update.message().text()));
                 msg = "Ссылка успешно удалена";
-            } else msg = "Некорректная ссылка";
+            } else {
+                msg = "Некорректная ссылка";
+            }
             return msg;
         } catch (ScrapperClientException e) {
             return e.getMessage();

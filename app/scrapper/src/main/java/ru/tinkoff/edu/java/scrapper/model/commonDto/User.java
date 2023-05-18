@@ -1,6 +1,5 @@
 package ru.tinkoff.edu.java.scrapper.model.commonDto;
 
-
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import ru.tinkoff.edu.java.scrapper.model.jpa.UserEntity;
@@ -21,7 +20,7 @@ public class User {
     private String firstName;
     private String lastName;
 
-    public static UserEntity toEntity(User user){
+    public static UserEntity toEntity(User user) {
         UserEntity userEntity = new UserEntity();
 
         userEntity.setChatId(user.getChatId());
@@ -31,6 +30,5 @@ public class User {
 
         return userEntity;
     }
-
 
 }

@@ -1,8 +1,6 @@
 package ru.tinkoff.edu.java.scrapper.dto;
 
-
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.time.OffsetDateTime;
 
 public record GitHubResponse(@JsonProperty("pushed_at") OffsetDateTime pushedAt,
@@ -12,15 +10,14 @@ public record GitHubResponse(@JsonProperty("pushed_at") OffsetDateTime pushedAt,
                              @JsonProperty("forks_count") int forksCount
 ) {
 
-
     @Override
     public String toString() {
-        return "GitHubResponse{" +
-                "pushedAt=" + pushedAt +
-                ", updatedAt=" + updatedAt +
-                ", fullName='" + fullName + '\'' +
-                ", description='" + description + '\'' +
-                ", forksCount=" + forksCount +
-                '}';
+        return "GitHubResponse{"
+            + "pushedAt=" + pushedAt
+            + ", updatedAt=" + updatedAt
+            + ", fullName='" + fullName + '\''
+            + ", description='" + description + '\''
+            + ", forksCount=" + forksCount
+            + '}';
     }
 }

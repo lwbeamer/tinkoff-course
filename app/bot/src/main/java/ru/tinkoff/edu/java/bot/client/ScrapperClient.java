@@ -4,13 +4,17 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
-import ru.tinkoff.edu.java.bot.dto.*;
-
+import ru.tinkoff.edu.java.bot.dto.AddLinkRequest;
+import ru.tinkoff.edu.java.bot.dto.LinkResponse;
+import ru.tinkoff.edu.java.bot.dto.ListLinkResponse;
+import ru.tinkoff.edu.java.bot.dto.RemoveLinkRequest;
+import ru.tinkoff.edu.java.bot.dto.UserAddDto;
 
 public class ScrapperClient {
 
     private final WebClient webClient;
 
+    private final String wentWrongMessage = "Что-то пошло не так. Проблема на нашей стороне, повторите попытку позже";
 
     //По умолчанию - webClient инжектится из ClientConfiguration c baseUrl по умолчанию
     public ScrapperClient(WebClient webClient) {
@@ -22,59 +26,64 @@ public class ScrapperClient {
         this.webClient = WebClient.create(baseUrl);
     }
 
-
     public ListLinkResponse getLinks(Long tgChatId) {
-        ListLinkResponse response = webClient.get().uri("/links").header("Tg-Chat-Id", String.valueOf(tgChatId)).exchangeToMono(r -> {
-            if (r.statusCode().equals(HttpStatus.NOT_FOUND)) {
-                throw new ScrapperClientException("Чат с таким ID не зарегистрирован");
-            } else if (r.statusCode().equals(HttpStatus.INTERNAL_SERVER_ERROR)) {
-                throw new ScrapperClientException("Что-то пошло не так. Проблема на нашей стороне, повторите попытку позже");
-            }
-            return r.bodyToMono(ListLinkResponse.class);
-        }).block();
+        ListLinkResponse response =
+            webClient.get().uri("/links").header("Tg-Chat-Id", String.valueOf(tgChatId)).exchangeToMono(r -> {
+                if (r.statusCode().equals(HttpStatus.NOT_FOUND)) {
+                    throw new ScrapperClientException("Чат с таким ID не зарегистрирован");
+                } else if (r.statusCode().equals(HttpStatus.INTERNAL_SERVER_ERROR)) {
+                    throw new ScrapperClientException(
+                        wentWrongMessage);
+                }
+                return r.bodyToMono(ListLinkResponse.class);
+            }).block();
 
         return response;
     }
 
     public LinkResponse addLink(Long tgChatId, AddLinkRequest request) {
         LinkResponse response = webClient.post().uri("/links").header("Tg-Chat-Id", String.valueOf(tgChatId))
-                .bodyValue(request).exchangeToMono(r -> {
-                    if (r.statusCode().equals(HttpStatus.BAD_REQUEST)) {
-                        throw new ScrapperClientException("Ссылка с таким URL уже добавлена");
-                    } else if (r.statusCode().equals(HttpStatus.NOT_FOUND)) {
-                        throw new ScrapperClientException("Чат с таким ID не зарегистрирован");
-                    } else if (r.statusCode().equals(HttpStatus.INTERNAL_SERVER_ERROR)) {
-                        throw new ScrapperClientException("Что-то пошло не так. Проблема на нашей стороне, повторите попытку позже");
-                    }
-                    return r.bodyToMono(LinkResponse.class);
-                }).block();
+            .bodyValue(request).exchangeToMono(r -> {
+                if (r.statusCode().equals(HttpStatus.BAD_REQUEST)) {
+                    throw new ScrapperClientException("Ссылка с таким URL уже добавлена");
+                } else if (r.statusCode().equals(HttpStatus.NOT_FOUND)) {
+                    throw new ScrapperClientException("Чат с таким ID не зарегистрирован");
+                } else if (r.statusCode().equals(HttpStatus.INTERNAL_SERVER_ERROR)) {
+                    throw new ScrapperClientException(
+                        wentWrongMessage);
+                }
+                return r.bodyToMono(LinkResponse.class);
+            }).block();
 
         return response;
     }
 
     public LinkResponse deleteLink(Long tgChatId, RemoveLinkRequest request) {
-        LinkResponse response = webClient.method(HttpMethod.DELETE).uri("/links").header("Tg-Chat-Id", String.valueOf(tgChatId))
+        LinkResponse response =
+            webClient.method(HttpMethod.DELETE).uri("/links").header("Tg-Chat-Id", String.valueOf(tgChatId))
                 .bodyValue(request).exchangeToMono(r -> {
                     if (r.statusCode().equals(HttpStatus.BAD_REQUEST)) {
                         throw new ScrapperClientException("Некорректно указана ссылка");
                     } else if (r.statusCode().equals(HttpStatus.NOT_FOUND)) {
-                        throw new ScrapperClientException("Ссылка с таким URL не найдена или чат с таким ID не зарегистрирован");
+                        throw new ScrapperClientException(
+                            "Ссылка с таким URL не найдена или чат с таким ID не зарегистрирован");
                     } else if (r.statusCode().equals(HttpStatus.INTERNAL_SERVER_ERROR)) {
-                        throw new ScrapperClientException("Что-то пошло не так. Проблема на нашей стороне, повторите попытку позже");
+                        throw new ScrapperClientException(
+                            wentWrongMessage);
                     }
                     return r.bodyToMono(LinkResponse.class);
                 }).block();
 
         return response;
     }
-
 
     public void registerChat(Long tgChatId, UserAddDto userAddDto) {
         webClient.post().uri("/tg-chat/{id}", tgChatId).bodyValue(userAddDto).exchangeToMono(response -> {
             if (response.statusCode().equals(HttpStatus.BAD_REQUEST)) {
                 throw new ScrapperClientException("Некорректно указан ID или такой чат уже зарегистрирован");
             } else if (response.statusCode().equals(HttpStatus.INTERNAL_SERVER_ERROR)) {
-                throw new ScrapperClientException("Что-то пошло не так. Проблема на нашей стороне, повторите попытку позже");
+                throw new ScrapperClientException(
+                    wentWrongMessage);
             }
             return Mono.empty();
         }).block();
@@ -87,11 +96,11 @@ public class ScrapperClient {
             } else if (response.statusCode().equals(HttpStatus.NOT_FOUND)) {
                 throw new ScrapperClientException("Чат с таким ID не найден");
             } else if (response.statusCode().equals(HttpStatus.INTERNAL_SERVER_ERROR)) {
-                throw new ScrapperClientException("Что-то пошло не так. Проблема на нашей стороне, повторите попытку позже");
+                throw new ScrapperClientException(
+                    wentWrongMessage);
             }
             return Mono.empty();
         }).block();
     }
-
 
 }

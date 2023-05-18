@@ -2,28 +2,25 @@ package ru.tinkoff.edu.java.scrapper.repository.jdbc;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.stereotype.Repository;
 import ru.tinkoff.edu.java.scrapper.mapper.LinkRowMapper;
 import ru.tinkoff.edu.java.scrapper.model.commonDto.Link;
 import ru.tinkoff.edu.java.scrapper.repository.jdbcAndJooqContract.LinkRepository;
-
 import java.sql.Timestamp;
 import java.util.List;
 
-
 @Slf4j
 public class LinkJdbcTemplateRepository implements LinkRepository {
-
 
     private final JdbcTemplate jdbcTemplate;
 
     private final LinkRowMapper linkRowMapper;
 
+    private final int millisInSecond = 1000;
+
     public LinkJdbcTemplateRepository(JdbcTemplate jdbcTemplate, LinkRowMapper linkRowMapper) {
         this.jdbcTemplate = jdbcTemplate;
         this.linkRowMapper = linkRowMapper;
     }
-
 
     @Override
     public List<Link> findAll() {
@@ -40,14 +37,12 @@ public class LinkJdbcTemplateRepository implements LinkRepository {
         return link.size() == 0 ? null : link.get(0);
     }
 
-
     @Override
     public void add(Link link) {
         log.info("add() method invocation in linkRepo");
         String sql = "insert into link (url, checked_at) values(?, ?)";
         jdbcTemplate.update(sql, link.getUrl(), link.getCheckedAt());
     }
-
 
     @Override
     public void updateCheckDate(Link link) {
@@ -67,7 +62,7 @@ public class LinkJdbcTemplateRepository implements LinkRepository {
     //поиск ссылок по критерию
     public List<Link> findOldLinks(Long timeUpdateDelta) {
         log.info("findOldLinks() method invocation in linkRepo");
-        Timestamp compareDate = new Timestamp(System.currentTimeMillis() - timeUpdateDelta * 1000);
+        Timestamp compareDate = new Timestamp(System.currentTimeMillis() - timeUpdateDelta * millisInSecond);
         String sql = "select * from link where link.checked_at < ? order by link.checked_at desc";
         return jdbcTemplate.query(sql, linkRowMapper, compareDate);
     }
@@ -75,8 +70,16 @@ public class LinkJdbcTemplateRepository implements LinkRepository {
     @Override
     public void updateGhLink(Link link) {
         log.info("updateGhLink() method invocation in linkJdbcRepo");
-        String sql = "update link set checked_at = ?, gh_forks_count = ?, gh_description = ?, gh_pushed_at = ? where id = ?";
-        jdbcTemplate.update(sql, link.getCheckedAt(), link.getGhForksCount(), link.getGhDescription(), link.getGhPushedAt(), link.getId());
+        String sql =
+            "update link set checked_at = ?, gh_forks_count = ?, gh_description = ?, gh_pushed_at = ? where id = ?";
+        jdbcTemplate.update(
+            sql,
+            link.getCheckedAt(),
+            link.getGhForksCount(),
+            link.getGhDescription(),
+            link.getGhPushedAt(),
+            link.getId()
+        );
     }
 
     @Override

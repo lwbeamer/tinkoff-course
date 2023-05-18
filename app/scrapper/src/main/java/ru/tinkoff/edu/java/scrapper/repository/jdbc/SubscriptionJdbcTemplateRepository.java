@@ -1,16 +1,12 @@
 package ru.tinkoff.edu.java.scrapper.repository.jdbc;
 
-
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.stereotype.Repository;
 import ru.tinkoff.edu.java.scrapper.mapper.LinkRowMapper;
 import ru.tinkoff.edu.java.scrapper.mapper.SubscriptionRowMapper;
 import ru.tinkoff.edu.java.scrapper.model.commonDto.Link;
 import ru.tinkoff.edu.java.scrapper.model.jdbcAndJooq.Relation;
 import ru.tinkoff.edu.java.scrapper.repository.jdbcAndJooqContract.SubscriptionRepository;
-
 import java.util.List;
 
 @Slf4j
@@ -22,7 +18,11 @@ public class SubscriptionJdbcTemplateRepository implements SubscriptionRepositor
 
     private final LinkRowMapper linkRowMapper;
 
-    public SubscriptionJdbcTemplateRepository(JdbcTemplate jdbcTemplate, SubscriptionRowMapper subscriptionRowMapper, LinkRowMapper linkRowMapper) {
+    public SubscriptionJdbcTemplateRepository(
+        JdbcTemplate jdbcTemplate,
+        SubscriptionRowMapper subscriptionRowMapper,
+        LinkRowMapper linkRowMapper
+    ) {
         this.jdbcTemplate = jdbcTemplate;
         this.subscriptionRowMapper = subscriptionRowMapper;
         this.linkRowMapper = linkRowMapper;
@@ -49,7 +49,6 @@ public class SubscriptionJdbcTemplateRepository implements SubscriptionRepositor
         List<Relation> relation = jdbcTemplate.query(sql, subscriptionRowMapper, chatId, linkId);
         return relation.size() == 0 ? null : relation.get(0);
     }
-
 
     @Override
     public void addRelation(Relation relation) {

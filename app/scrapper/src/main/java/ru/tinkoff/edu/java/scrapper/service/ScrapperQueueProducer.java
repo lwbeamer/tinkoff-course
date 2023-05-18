@@ -1,6 +1,5 @@
 package ru.tinkoff.edu.java.scrapper.service;
 
-
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.AmqpTemplate;
 import ru.tinkoff.edu.java.scrapper.configuration.ApplicationConfig;
@@ -13,7 +12,6 @@ public class ScrapperQueueProducer implements UpdateNotificationService {
     private final AmqpTemplate rabbitTemplate;
 
     private final ApplicationConfig config;
-
 
     public ScrapperQueueProducer(AmqpTemplate rabbitTemplate, ApplicationConfig config) {
         this.rabbitTemplate = rabbitTemplate;
